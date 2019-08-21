@@ -1,11 +1,11 @@
 import React from 'react';
-import { HashRouter as Router, Route, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import logo from '../logo.svg';
 import { Nav, NavHeader, Img, NavLeft, NavCenter, NavRight} from '../Styles/NavbarStyles';
+import { Parent } from './Modal'
 
 export default function Header(){
   return(
-    <Router>
       <Nav>
         <NavHeader>
 
@@ -18,30 +18,23 @@ export default function Header(){
           </NavCenter>
 
           <NavRight>
-            <Link to="/help" t>Help</Link>
+            <Link to="/help">Help</Link>
           </NavRight>
 
         </NavHeader>
       </Nav>
 
-      <Route exact path="/" component={Home} />
-      <Route path="/help" component={Help} />
-    </Router>
   )
 }
 
-function Help(){
+export function Help(){
   return(
-    <div>
-      <h1>Help</h1>
-    </div>
+    <Parent/>
   )
 }
 
-function Home(){
+export function Home(){
   return(
-    <div>
-      <h1>Home</h1>
-    </div>
+      <div>Home</div>
   )
 }
