@@ -2,7 +2,6 @@ import React from 'react';
 import { Link } from "react-router-dom";
 import logo from '../logo.svg';
 import { Nav, NavHeader, Img, NavLeft, NavCenter, NavRight} from '../Styles/NavbarStyles';
-import { Parent } from './Modal'
 
 export default function Header(){
   return(
@@ -14,7 +13,7 @@ export default function Header(){
           </NavLeft>
           
           <NavCenter>
-            <Link to="/" >Home</Link>
+            <Link to="/">Home</Link>
           </NavCenter>
 
           <NavRight>
@@ -29,12 +28,12 @@ export default function Header(){
 
 export function Help(){
   return(
-    <Parent/>
+    <div>Help</div>
   )
 }
 
 export function Home(){
   return(
-      <div>Home</div>
+    <div>Home</div>
   )
 }

@@ -1,36 +1,38 @@
 import React from 'react';
-import Header, { Help } from './Components/Header'
-import { HashRouter as Router, Route,Redirect} from 'react-router-dom';
-import { Auth, Login } from './Components/Login'
+import Header, { Help, Home } from './Components/Header'
+import { HashRouter as Router, Route } from 'react-router-dom';
+import { Login } from './Components/Login'
+import { ModalView } from './Components/Modal'
+import { AuthContext, AuthProvider } from './Contexts/AuthContext';
+import ModalProvider from './Contexts/ModalContext';
 
 export default function App() {
+  const auth = React.useContext(AuthContext);
+  
+  if(auth) {
+    return (
+      <Router>
+        <Route exact path="/" component={Home} />
+        <Route path="/help" component={Help} />
+        <Route path="/:id" component={Page} />
+        <ModalView/>
+      </Router>
+  )}
+
   return (
-    <Router>
-      
-      <PrivateRoute exact path="/" component={Header} />
-      <PrivateRoute path="/help" component={Help} />
-      <Route path="/login" component={Login} />
-      
-    </Router>
+    <ModalProvider>
+      <AuthProvider>
+        <Login/> 
+      </AuthProvider>
+    </ModalProvider>
   )
 }
 
-function PrivateRoute({ component: Component, ...rest }) {
-
+function Page({match}) {
   return(
-    <Route 
-      {...rest}
-      render={ props =>
-        Auth.isAuthenticated ? (
-          <Component {...props} />
-        ) : (
-          <Redirect
-            to={{
-              pathname:"/login",
-            }}
-          />
-        )
-      }
-    />
+    <div>
+      <Header />
+      <h1>ID: {match.params.id}</h1>
+    </div>
   )
 }

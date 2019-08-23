@@ -1,12 +1,15 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import ReactDOM from 'react-dom';
-import FormsProvider, { FormsContext} from '../Contexts/FormsContext';
+import FormsProvider, { FormsContext } from '../Contexts/FormsContext';
+import ModalProvider, { ModalContext } from '../Contexts/ModalContext';
 import * as Styles from '../Styles/ModalStyles';
-
+import { promisify } from '../Utils';
 
 const modalRoot = document.getElementById('modal-root');
 
 class Modal extends React.Component {
+  static contextType = ModalContext;
+
   constructor(props) {
     super(props);
     this.el = document.createElement('div');
@@ -21,37 +24,52 @@ class Modal extends React.Component {
   }
 
   render() {
-    return ReactDOM.createPortal(
-      this.props.children,
-      modalRoot,
-    );
+    console.log(this.context[0]);
+    return (
+
+        <Test isOpen={this.context[0]} rt={this.el}>
+          {this.props.children}
+        </Test>
+
+    )
   }
 }
 
-export function Parent(){
+const Test = ({children, isOpen, rt}) => {
+  return isOpen ? ReactDOM.createPortal(children, rt) : null;
+}
+
+export function ModalView(){
   return(
-    <Modal>
-    <FormsProvider>
-      <Styles.Root>
-        <List />
-      </Styles.Root>
-    </FormsProvider>
-    </Modal>
+    <ModalProvider>
+      <Modal>
+        <FormsProvider>
+          <Styles.Root>
+            <List />
+          </Styles.Root>
+        </FormsProvider>
+      </Modal>
+    </ModalProvider>
   )
 }
 
 
 function List(){
   const [forms, setForms] = useContext(FormsContext)
-  new Promise((resolve, reject) => {
-    global.JF.getForms({ limit: 200 } ,response => {
-      if(response) {
-        resolve(response);
-      }
-    })
-  }).then((res) => setForms(res) )
+  const [isOpen, setIsOpen] = useContext(ModalContext)
   
 
+  useEffect(() => {
+    const prom = promisify(global.JF.getForms)
+    prom({ limit: 200 })
+    .then((res) => setForms(res))
+  },[])
+
+  const handleClick = (e) => {
+    console.log("beforeset : " + isOpen)
+    setIsOpen(false)
+    console.log("afterset : " + isOpen)
+  }
 
   return(
     <Styles.ModalDiv>
@@ -60,18 +78,17 @@ function List(){
           <h1>Select A Form</h1>
       </Styles.FormListHeader>
       <Styles.FormListContainer>
-        {forms.map((f,index) => {
-          return <Card key={index} name={f.title} desc={f.created_at} />
+        {forms.map((f) => {
+          return <Card key={f.id} name={f.title} desc={f.created_at} id={f.id} onClick={handleClick}/>
         })}
       </Styles.FormListContainer>
-  
     </Styles.ModalDiv>
   )
 }
 
 function Card(props){
   return(
-    <Styles.FormListItem>
+    <Styles.FormListItem href={"/#/" + props.id} onClick={props.onClick}>
       <Styles.ItemContent>
         <Styles.ItemTitle>{props.name}</Styles.ItemTitle>
           <Styles.ItemDesc>{props.desc}</Styles.ItemDesc>
