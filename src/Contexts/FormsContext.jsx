@@ -11,3 +11,15 @@ export default function FormsProvider({children}){
     </FormsContext.Provider>
   )
 }
+
+export const FormDataContext = React.createContext();
+
+export function FormDataProvider({children}) {
+  const [form, setForm] = React.useState({})
+
+  return(
+    <FormDataContext.Provider value={[form, setForm]}>
+      {children}
+    </FormDataContext.Provider>
+  )
+}

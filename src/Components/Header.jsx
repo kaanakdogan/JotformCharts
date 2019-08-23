@@ -17,7 +17,7 @@ export default function Header(){
           </NavCenter>
 
           <NavRight>
-            <Link to="/help">Help</Link>
+            <Link to="/shelp">Help</Link>
           </NavRight>
 
         </NavHeader>

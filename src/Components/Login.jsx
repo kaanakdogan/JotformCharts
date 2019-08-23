@@ -6,8 +6,8 @@ export function Login(){
   const [state, setState] = React.useContext(AuthContext);
   
   useEffect(() => {
-    promisify(global.JF.getUser)
-    .then(() =>  {
+    const prom = promisify(global.JF.getUser)
+    prom().then(() =>  {
       setState(true)
     })
     .catch(() => setState(false))
