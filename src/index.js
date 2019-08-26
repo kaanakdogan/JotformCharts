@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-filename-extension */
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
@@ -6,12 +7,12 @@ import { AuthProvider } from './Contexts/AuthContext';
 import { FormDataProvider } from './Contexts/FormsContext';
 
 ReactDOM.render(
-  <FormDataProvider>
-    <AuthProvider>
+  <AuthProvider>
+    <FormDataProvider>
       <App />
-    </AuthProvider> 
-  </FormDataProvider>,
-  document.getElementById('root')
+    </FormDataProvider>
+  </AuthProvider>,
+  document.getElementById('root'),
 );
 
 // If you want your app to work offline and load faster, you can change

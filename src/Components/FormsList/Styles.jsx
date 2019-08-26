@@ -1,47 +1,4 @@
-import styled, { createGlobalStyle } from 'styled-components'
-
-export const Root = styled.div`
-  
-  position: relative;
-  z-index: 999;
-`
-
-export const GlobalStyle = createGlobalStyle`
-  body * {
-    box-sizing: border-box;
-    font-family: Circular Std Book,-apple-system,blinkmacsystemfont,Segoe UI,roboto,oxygen-sans,ubuntu,cantarell,Helvetica Neue,sans-serif;
-  }
-`
-
-export const ModalDiv = styled.div`
-padding: 15px;
-background: rgba(255, 255, 255, 0.97);
-position: fixed;
-overflow: auto;
-top: 0;
-left: 0;
-width: 100%;
-height: 100%;
-z-index: 11;
-padding: 32px;
-text-align: center;
-`
-export const FormListHeader = styled.div`
-  padding-top: 135px;
-  transition: .4s;
-  left: 0;
-  pointer-events: none;
-  top: 0;
-  width: 100%;
-  margin-bottom: 32px;
-`
-
-export const FormListContainer = styled.div`
-  margin-top: 30px;
-  max-width: 600px;
-  margin: auto;
-  width: 100%;
-`
+import styled from 'styled-components';
 
 export const FormListItem = styled.a`
   display: flex;
@@ -60,7 +17,7 @@ export const FormListItem = styled.a`
   :hover {
     border-color: #4277ff;
   }
-`
+`;
 
 export const ItemContent = styled.div`
   text-align: left;
@@ -70,7 +27,7 @@ export const ItemContent = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
   font-weight: normal;
-`
+`;
 
 export const ItemTitle = styled.h2`
   margin: 0;
@@ -81,7 +38,7 @@ export const ItemTitle = styled.h2`
   white-space: nowrap;
   display: block;
   font-weight: 400;
-`
+`;
 
 export const ItemDesc = styled.p`
   margin: 0;
@@ -89,11 +46,11 @@ export const ItemDesc = styled.p`
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
-`
+`;
 
 export const ItemLabels = styled.div`
   text-align: right;
   vertical-align: middle;
   flex-shrink: 0;
   margin-left: 5px;
-`
+`;
