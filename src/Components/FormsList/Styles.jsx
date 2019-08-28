@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const FormListItem = styled.a`
+export const Item = styled.a`
   display: flex;
   align-items: center;
   position: relative;

@@ -1,6 +1,8 @@
 import React, { useEffect, useContext } from 'react';
 import PropType from 'prop-types';
 import promisify from '../Utils';
+import ModalProvider, { ModalContext } from './ModalContext';
+import History from '../History';
 
 export const AuthContext = React.createContext(false);
 
@@ -22,6 +24,9 @@ function Login() {
     prom()
       .then(() => {
         setAuth(true);
+        const formProm = promisify(global.JF.getForms);
+        formProm({ limit: 200 })
+          .then((res) => History.push(res[0].id));
       })
       .catch(() => {
         setAuth(false);

@@ -2,17 +2,25 @@
 import React from 'react';
 import { HashRouter as Router, Route, Switch } from 'react-router-dom';
 import PropType from 'prop-types';
-import Header, { Help, Home } from './Components/Header';
-import { ModalView } from './Components/Modal/Index';
+import Header, { Help } from './Components/Header';
 import { FormDataContext } from './Contexts/FormsContext';
 import promisify from './Utils';
-import List from './Components/FormsList/Index';
+import ModalController from './Components/ModalController';
+import ModalProvider, { ModalContext } from './Contexts/ModalContext';
+import History from './History';
 
 function Page({ match }) {
   const [, setData] = React.useContext(FormDataContext);
+  const [, setModal] = React.useContext(ModalContext);
 
   React.useEffect(() => {
     const prom = promisify(global.JF.getFormQuestions);
+    setModal(
+      {
+        isOpen: true,
+        modalName: 'createReport',
+      },
+    );
     prom(match.params.id)
       .then((res) => {
         setData(Object.values(res));
@@ -29,13 +37,13 @@ function Page({ match }) {
 
 export default function App() {
   return (
-    <Router>
+    <Router history={History}>
       <Switch>
-        <Route exact path="/" component={Home} />
+        <Route exact path="/" component={Page} />
         <Route path="/help" component={Help} />
         <Route path="/:id(\d+)" component={Page} />
       </Switch>
-      <ModalView header={<h1>Select A Form</h1>}><List /></ModalView>
+      <ModalController />
     </Router>
   );
 }

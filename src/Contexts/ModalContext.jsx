@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-export const ModalContext = React.createContext(true);
+export const ModalContext = React.createContext();
 
 export default function ModalProvider({ children }) {
-  const [modal, setModal] = React.useState(true);
+  const [modal, setModal] = React.useState({ isOpen: false, modalName: '' });
 
   return (
     <ModalContext.Provider value={[modal, setModal]}>

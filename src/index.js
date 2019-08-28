@@ -5,11 +5,14 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { AuthProvider } from './Contexts/AuthContext';
 import { FormDataProvider } from './Contexts/FormsContext';
+import ModalProvider from './Contexts/ModalContext';
 
 ReactDOM.render(
   <AuthProvider>
     <FormDataProvider>
-      <App />
+      <ModalProvider>
+        <App />
+      </ModalProvider>
     </FormDataProvider>
   </AuthProvider>,
   document.getElementById('root'),

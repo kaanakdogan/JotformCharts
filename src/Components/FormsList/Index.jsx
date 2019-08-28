@@ -8,18 +8,18 @@ import { FormsContext } from '../../Contexts/FormsContext';
 
 export default function List() {
   const [forms, setForms] = useContext(FormsContext);
-  const [isOpen, setIsOpen] = useContext(ModalContext);
+  const [modal, setModal] = useContext(ModalContext);
 
   useEffect(() => {
     const prom = promisify(global.JF.getForms);
     prom({ limit: 200 })
-      .then((res) => setForms(res));
-  }, []);
+      .then((res) => {
+        setForms(res); console.log(res);
+      });
+  }, [modal]);
 
   const handleClick = () => {
-    console.log(`beforeset : ${isOpen}`);
-    setIsOpen(false);
-    console.log(`afterset : ${isOpen}`);
+    setModal({ isOpen: false, modalName: 'formSelect' });
   };
 
   return (
@@ -32,7 +32,7 @@ function Card({
   id, onClick, name, desc,
 }) {
   return (
-    <Styles.FormListItem href={`/#/${id}`} onClick={onClick}>
+    <Styles.Item href={`/#/${id}`} onClick={onClick}>
       <Styles.ItemContent>
         <Styles.ItemTitle>{name}</Styles.ItemTitle>
         <Styles.ItemDesc>{desc}</Styles.ItemDesc>
@@ -40,7 +40,7 @@ function Card({
       <Styles.ItemLabels>
 
       </Styles.ItemLabels>
-    </Styles.FormListItem>
+    </Styles.Item>
   );
 }
 

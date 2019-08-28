@@ -1,8 +1,34 @@
 import styled, { createGlobalStyle } from 'styled-components';
 
+export const ModalCont = styled.div`
+position: relative;
+`;
+
+export const Close = styled.span`
+  color: #aab3cc;
+  font-size: 20px;
+  background: #edeef5;
+  border-radius: 50%;
+  right: 10px;
+  top: 10px;
+  width: 26px;
+  height: 26px;
+  text-align: center;
+
+  &:hover {
+    color: #2f90ff;
+  }
+
+  &::before {
+    content: 'x';
+  }
+`;
+
+
 export const Header = styled.div`
-  padding-top: 135px;
-  transition: .4s;
+  padding-top: ${(props) => props.theme.header.paddingTop};
+  font-size: ${(props) => props.theme.header.fontSize};
+  font-weight: bold;
   left: 0;
   pointer-events: none;
   top: 0;
@@ -19,22 +45,23 @@ export const GlobalStyle = createGlobalStyle`
   }
 `;
 
-export const ModalDiv = styled.div.attrs((props) => ({
-  width: props.width || '100%',
-  height: props.height || '100%',
-}))`
-  padding: 15px;
+export const ModalContainer = styled.div`
   background: rgba(255, 255, 255, 0.97);
-  position: fixed;
   overflow: auto;
-  top: 0;
-  border-radius: ${(props) => (props.isBorder ? '5px' : '0px')}
-  left: 0;
-  width: 100%;
-  height: 100%;
+  border-radius: ${(props) => props.theme.modalContainer.borderRad}
+  height: ${(props) => props.theme.modalContainer.height}
+  width: ${(props) => props.theme.modalContainer.width}
   z-index: 11;
-  padding: 32px;
-  text-align: center;
+  padding: ${(props) => props.theme.modalContainer.padding}
+  text-align: ${(props) => props.theme.modalContainer.textAlign}
+  margin: auto;
+
+  & ${Close} {
+    position: absolute;
+    cursor: pointer;
+    font-weight: 100;
+    transition: color .3s;
+  }
 `;
 
 
@@ -64,6 +91,7 @@ export const Root = styled.div`
   background-color: rgba(0,0,0,.75);
 
   & ${ModalWrapper} {
+    color: #1e2c4c;
     margin: auto;
     width: auto;
     top: auto;
@@ -74,7 +102,7 @@ export const Root = styled.div`
   }
 `;
 
-export const ModalContainer = styled.div`
+export const ModalContent = styled.div`
   margin-top: 30px;
   max-width: 600px;
   margin: auto;

@@ -1,11 +1,19 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import logo from '../logo.svg';
 import {
   Nav, NavHeader, Img, NavLeft, NavCenter, NavRight,
 } from '../Styles/NavbarStyles';
+import { ModalContext } from '../Contexts/ModalContext';
 
 export default function Header() {
+  const [, setModal] = React.useContext(ModalContext);
+
+  const handleClick = (e) => {
+    e.preventDefault();
+
+    setModal({ isOpen: true, modalName: 'formSelect' });
+  };
+
   return (
     <Nav>
       <NavHeader>
@@ -13,11 +21,9 @@ export default function Header() {
           <Img src={logo} className="App-logo" alt="logo" />
         </NavLeft>
         <NavCenter>
-          <Link to="/">Home</Link>
+          <button type="button" tabIndex={-1} to="/" onClick={handleClick}>Your Forms</button>
         </NavCenter>
-        <NavRight>
-          <Link to="/shelp">Help</Link>
-        </NavRight>
+        <NavRight />
       </NavHeader>
     </Nav>
   );

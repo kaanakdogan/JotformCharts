@@ -5,7 +5,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import FormsProvider from '../../Contexts/FormsContext';
-import ModalProvider, { ModalContext } from '../../Contexts/ModalContext';
+import { ModalContext } from '../../Contexts/ModalContext';
 import * as Styles from './Styles';
 
 const modalRoot = document.getElementById('modal-root');
@@ -28,9 +28,9 @@ class Modal extends React.Component {
   }
 
   render() {
+    console.log(this.context[0].isOpen);
     return (
-      this.context[0] ? ReactDOM.createPortal(
-
+      this.context[0].isOpen ? ReactDOM.createPortal(
         this.props.children, this.el,
       ) : null
     );
@@ -38,26 +38,42 @@ class Modal extends React.Component {
 }
 
 // eslint-disable-next-line import/prefer-default-export
-export function ModalView({ children, header }) {
+export function ModalView(props) {
+  const [modal, setModal] = React.useContext(ModalContext);
+
+  const handleClick = (e) => {
+    e.preventDefault();
+
+    setModal(
+      {
+        isOpen: false,
+        modalName: modal.modalName,
+      },
+    );
+  };
+
   return (
-    <ModalProvider>
+    <div>
       <Styles.GlobalStyle />
       <Modal>
         <FormsProvider>
           <Styles.Root>
             <Styles.ModalWrapper>
-              <Styles.ModalDiv isBorder={false}>
+              <Styles.ModalContainer>
+                <Styles.ModalCont>
+                  <Styles.Close onClick={handleClick} />
                 <Styles.Header>
-                  {header}
+                  {props.header}
                 </Styles.Header>
-                <Styles.ModalContainer>
-                  {children}
-                </Styles.ModalContainer>
-              </Styles.ModalDiv>
+                <Styles.ModalContent>
+                  {props.children}
+                </Styles.ModalContent>
+                </Styles.ModalCont>
+              </Styles.ModalContainer>
             </Styles.ModalWrapper>
           </Styles.Root>
         </FormsProvider>
       </Modal>
-    </ModalProvider>
+    </div>
   );
 }
