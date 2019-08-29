@@ -4,17 +4,19 @@ import ReactDOM from 'react-dom';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { AuthProvider } from './Contexts/AuthContext';
-import { FormDataProvider } from './Contexts/FormsContext';
+import FormsProvider, { FormDataProvider } from './Contexts/FormsContext';
 import ModalProvider from './Contexts/ModalContext';
 
 ReactDOM.render(
-  <AuthProvider>
-    <FormDataProvider>
-      <ModalProvider>
-        <App />
-      </ModalProvider>
-    </FormDataProvider>
-  </AuthProvider>,
+  <FormsProvider>
+    <AuthProvider>
+      <FormDataProvider>
+        <ModalProvider>
+          <App />
+        </ModalProvider>
+      </FormDataProvider>
+    </AuthProvider>
+  </FormsProvider>,
   document.getElementById('root'),
 );
 

@@ -4,7 +4,6 @@
 /* eslint-disable react/destructuring-assignment */
 import React from 'react';
 import ReactDOM from 'react-dom';
-import FormsProvider from '../../Contexts/FormsContext';
 import { ModalContext } from '../../Contexts/ModalContext';
 import * as Styles from './Styles';
 
@@ -28,7 +27,6 @@ class Modal extends React.Component {
   }
 
   render() {
-    console.log(this.context[0].isOpen);
     return (
       this.context[0].isOpen ? ReactDOM.createPortal(
         this.props.children, this.el,
@@ -56,7 +54,6 @@ export function ModalView(props) {
     <div>
       <Styles.GlobalStyle />
       <Modal>
-        <FormsProvider>
           <Styles.Root>
             <Styles.ModalWrapper>
               <Styles.ModalContainer>
@@ -72,7 +69,6 @@ export function ModalView(props) {
               </Styles.ModalContainer>
             </Styles.ModalWrapper>
           </Styles.Root>
-        </FormsProvider>
       </Modal>
     </div>
   );

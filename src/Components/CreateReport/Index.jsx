@@ -1,13 +1,23 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useState } from 'react';
 import * as Styles from './Styles';
+import { AddReport } from '../../DataStore';
+import { FormDataContext } from '../../Contexts/FormsContext';
+import { ModalContext } from '../../Contexts/ModalContext';
 
 export default function CreateReport() {
-  const [name, setName] = useState('');
+  const [txt, setName] = useState('');
+  const [formData] = React.useContext(FormDataContext);
+  const [, setModal] = React.useContext(ModalContext);
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
-    console.log(`${name} Submit`);
+    AddReport(formData, { name: txt }).then(() => {
+      setModal({
+        isOpen: false,
+        modalName: 'createReport',
+      });
+    });
   };
 
   return (
@@ -19,7 +29,7 @@ export default function CreateReport() {
           name="name"
           placeholder="New Report"
           onChange={(e) => setName(e.target.value)}
-          value={name}
+          value={txt}
           required
         />
       </Styles.Content>

@@ -7,16 +7,8 @@ import { ModalContext } from '../../Contexts/ModalContext';
 import { FormsContext } from '../../Contexts/FormsContext';
 
 export default function List() {
-  const [forms, setForms] = useContext(FormsContext);
-  const [modal, setModal] = useContext(ModalContext);
-
-  useEffect(() => {
-    const prom = promisify(global.JF.getForms);
-    prom({ limit: 200 })
-      .then((res) => {
-        setForms(res); console.log(res);
-      });
-  }, [modal]);
+  const [forms] = useContext(FormsContext);
+  const [, setModal] = useContext(ModalContext);
 
   const handleClick = () => {
     setModal({ isOpen: false, modalName: 'formSelect' });

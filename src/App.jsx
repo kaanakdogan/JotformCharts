@@ -6,12 +6,15 @@ import Header, { Help } from './Components/Header';
 import { FormDataContext } from './Contexts/FormsContext';
 import promisify from './Utils';
 import ModalController from './Components/ModalController';
-import ModalProvider, { ModalContext } from './Contexts/ModalContext';
+import { ModalContext } from './Contexts/ModalContext';
 import History from './History';
+import Tabs from './Components/Tabs/Index';
+import { CleanDatabase, GetFormReports } from './DataStore';
 
 function Page({ match }) {
   const [, setData] = React.useContext(FormDataContext);
-  const [, setModal] = React.useContext(ModalContext);
+  const [modal, setModal] = React.useContext(ModalContext);
+  const [reports, setReports] = React.useState([]);
 
   React.useEffect(() => {
     const prom = promisify(global.JF.getFormQuestions);
@@ -22,15 +25,30 @@ function Page({ match }) {
       },
     );
     prom(match.params.id)
-      .then((res) => {
-        setData(Object.values(res));
+      .then(() => {
+        setData(match.params.id);
       });
-  }, []);
+  }, [match]);
+
+  React.useEffect(() => {
+    const prom = GetFormReports(match.params.id);
+    prom.then((reps) => {
+      if (!reps) {
+        setReports([]);
+      } else {
+        setReports(reps);
+      }
+    });
+  }, [modal]);
 
   return (
     <div>
       <Header />
-      <h1>Form Data: {match.params.id}</h1>
+      <Tabs>
+        {reports.map((rep) => (
+          <div label={rep.name} key={rep.id} id={rep.id}>{rep.name} + {rep.id}</div>
+        ))}
+      </Tabs>
     </div>
   );
 }

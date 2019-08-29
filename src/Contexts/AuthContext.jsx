@@ -1,8 +1,9 @@
 import React, { useEffect, useContext } from 'react';
 import PropType from 'prop-types';
 import promisify from '../Utils';
-import ModalProvider, { ModalContext } from './ModalContext';
 import History from '../History';
+import { FormsContext } from './FormsContext';
+import { CleanDatabase } from '../DataStore';
 
 export const AuthContext = React.createContext(false);
 
@@ -18,15 +19,17 @@ export function AuthProvider({ children }) {
 
 function Login() {
   const [isAuth, setAuth] = useContext(AuthContext);
+  const [, setForms] = useContext(FormsContext);
 
   useEffect(() => {
     const prom = promisify(global.JF.getUser);
+    CleanDatabase();
     prom()
       .then(() => {
         setAuth(true);
         const formProm = promisify(global.JF.getForms);
         formProm({ limit: 200 })
-          .then((res) => History.push(res[0].id));
+          .then((res) => { setForms(res); History.push(res[0].id); });
       })
       .catch(() => {
         setAuth(false);
