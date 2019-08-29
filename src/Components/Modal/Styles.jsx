@@ -36,15 +36,6 @@ export const Header = styled.div`
   margin-bottom: 32px;
 `;
 
-export const GlobalStyle = createGlobalStyle`
-  body * {
-    box-sizing: border-box;
-    font-family: Circular Std Book,
-    -apple-system,blinkmacsystemfont,
-    Segoe UI,roboto,oxygen-sans,ubuntu,cantarell,Helvetica Neue,sans-serif;
-  }
-`;
-
 export const ModalContainer = styled.div`
   background: rgba(255, 255, 255, 0.97);
   overflow: auto;

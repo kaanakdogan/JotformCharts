@@ -52,7 +52,6 @@ export function ModalView(props) {
 
   return (
     <div>
-      <Styles.GlobalStyle />
       <Modal>
           <Styles.Root>
             <Styles.ModalWrapper>
