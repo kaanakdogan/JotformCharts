@@ -12,6 +12,7 @@ const FullScreenTheme = {
     borderRad: '0px',
     textAlign: 'center',
     padding: '32px',
+    minWidth: '300px',
   },
   header: {
     paddingTop: '135px',
@@ -26,6 +27,7 @@ const CreateReportTheme = {
     borderRad: '5px',
     textAlign: 'left',
     padding: '16px 32px',
+    minWidth: '300px',
   },
   header: {
     paddingTop: '12px',
@@ -41,6 +43,12 @@ export default function ModalController() {
     return (
       <ThemeProvider theme={CreateReportTheme}>
         <ModalView header="Create A Report"><CreateReport /></ModalView>
+      </ThemeProvider>
+    );
+  } if (modal.modalName === 'errorModal') {
+    return (
+      <ThemeProvider theme={CreateReportTheme}>
+        <ModalView header="Report Not Found"><a href="#/"> Go back ?</a></ModalView>
       </ThemeProvider>
     );
   }

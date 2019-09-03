@@ -1,4 +1,4 @@
-import styled, { createGlobalStyle } from 'styled-components';
+import styled from 'styled-components';
 
 export const ModalCont = styled.div`
 position: relative;
@@ -46,6 +46,7 @@ export const ModalContainer = styled.div`
   padding: ${(props) => props.theme.modalContainer.padding}
   text-align: ${(props) => props.theme.modalContainer.textAlign}
   margin: auto;
+  min-width: ${(props) => props.theme.modalContainer.minWidth};
 
   & ${Close} {
     position: absolute;

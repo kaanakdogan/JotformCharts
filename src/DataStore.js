@@ -8,6 +8,7 @@ export async function GetFormReports(formId) {
   const reports = await GetReports();
 
   if (reports) {
+    // eslint-disable-next-line eqeqeq
     const formReps = reports.filter((r) => r.id == formId)[0];
 
     if (formReps) {
@@ -42,11 +43,28 @@ export async function AddReport(formId, report) {
   }
   let id = await GetNextId(formId);
   id += 1;
-  console.log(id);
   const newRep = report;
   newRep.id = id;
 
   formReports.push(newRep);
+
+  const newReps = Object.values(reports).filter((r) => r.id !== formId.toString());
+  newReps.push({ id: formId, reports: formReports });
+  return localforage.setItem('Reports', newReps);
+}
+
+export async function EditReport(formId, report) {
+  let formReports = await GetFormReports(formId);
+  let reports = await GetReports();
+  if (!formReports) {
+    formReports = [];
+  }
+  if (!reports) {
+    reports = [];
+  }
+
+  formReports = formReports.filter((r) => r.id !== report.id);
+  formReports.push(report);
 
   const newReps = Object.values(reports).filter((r) => r.id !== formId.toString());
   newReps.push({ id: formId, reports: formReports });

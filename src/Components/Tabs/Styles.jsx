@@ -5,7 +5,7 @@ export const tabList = styled.ol`
   padding-left: 0;
 `;
 
-export const tabItem = styled.li`
+export const tabItem = styled.a`
   display: inline-block;
   list-style: none;
   margin-bottom: -1px;

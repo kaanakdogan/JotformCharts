@@ -1,9 +1,11 @@
 import React, { useEffect, useContext } from 'react';
 import PropType from 'prop-types';
+import { Route } from 'react-router-dom';
 import promisify from '../Utils';
 import History from '../History';
 import { FormsContext } from './FormsContext';
 import { CleanDatabase } from '../DataStore';
+
 
 export const AuthContext = React.createContext(false);
 
@@ -29,7 +31,10 @@ function Login() {
         setAuth(true);
         const formProm = promisify(global.JF.getForms);
         formProm({ limit: 200 })
-          .then((res) => { setForms(res); History.push(res[0].id); });
+          .then((res) => {
+            setForms(res);
+            History.push(`/${res[0].id}`);
+          });
       })
       .catch(() => {
         setAuth(false);

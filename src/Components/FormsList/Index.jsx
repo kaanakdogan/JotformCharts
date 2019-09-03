@@ -1,8 +1,7 @@
 /* eslint-disable max-len */
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import PropType from 'prop-types';
 import * as Styles from './Styles';
-import promisify from '../../Utils';
 import { ModalContext } from '../../Contexts/ModalContext';
 import { FormsContext } from '../../Contexts/FormsContext';
 

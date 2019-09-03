@@ -1,9 +1,9 @@
 import React from 'react';
-import logo from '../logo.svg';
+import logo from '../../logo.svg';
 import {
   Nav, NavHeader, Img, NavLeft, NavCenter, NavRight,
-} from '../Styles/NavbarStyles';
-import { ModalContext } from '../Contexts/ModalContext';
+} from './Styles';
+import { ModalContext } from '../../Contexts/ModalContext';
 
 export default function Header() {
   const [, setModal] = React.useContext(ModalContext);

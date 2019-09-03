@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "chart.js": "^2.8.0",
     "history": "^4.9.0",
     "localforage": "^1.7.3",
     "prop-types": "^15.7.2",

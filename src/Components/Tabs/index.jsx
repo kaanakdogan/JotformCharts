@@ -1,28 +1,31 @@
+/* eslint-disable react/prop-types */
 import React, { useState, useContext } from 'react';
 import * as Styles from './Styles';
 import { ModalContext } from '../../Contexts/ModalContext';
 
 function Tab({
-  children, label, onClick, active,
+  label, onClick, active, id, form,
 }) {
-  const handleClick = () => {
-    onClick(label);
+  const handleClick = (e) => {
+    if (id === '-1') e.preventDefault();
+    onClick(id);
   };
 
-  if (active === label) {
+  if (active == id) {
     return (
-      <Styles.tabItemActive onClick={handleClick}>{label}</Styles.tabItemActive>
+      <Styles.tabItemActive href={`#/${form}/${id}`} onClick={handleClick}>{label}</Styles.tabItemActive>
     );
   }
 
   return (
-    <Styles.tabItem onClick={handleClick}>{label}</Styles.tabItem>
+    <Styles.tabItem href={`#/${form}/${id}`} onClick={handleClick}>{label}</Styles.tabItem>
   );
 }
 
-export default function Tabs({ children }) {
+export default function Tabs({ children, active }) {
   const [, setModal] = useContext(ModalContext);
-  const [activeTab, setActiveTab] = useState();
+  const [activeTab, setActiveTab] = useState(active);
+
 
   const newReportClick = () => {
     setModal({
@@ -35,6 +38,9 @@ export default function Tabs({ children }) {
     setActiveTab(tab);
   };
 
+  React.useEffect(() => { setActive(active); }, [active]);
+
+
   return (
     <div>
       <Styles.tabList>
@@ -44,16 +50,12 @@ export default function Tabs({ children }) {
             label={child.props.label}
             onClick={setActive}
             active={activeTab}
+            id={child.props.id}
+            form={child.props.form}
           />
         ))}
-        <Tab key="-1" label="New Report" onClick={newReportClick} />
+        <Tab key="-1" id="-1" label="New Report" onClick={newReportClick} />
       </Styles.tabList>
-      <div>
-        {children.map((child) => {
-          if (child.props.label !== activeTab) return undefined;
-          return child.props.children;
-        })}
-      </div>
 
     </div>
   );
