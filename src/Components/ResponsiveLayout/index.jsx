@@ -1,52 +1,26 @@
-import React, { useState } from 'react';
-import { WidthProvider, Responsive } from 'react-grid-layout';
+import React from 'react';
+import RGL, { WidthProvider } from 'react-grid-layout';
+import DashBoard from '../Charts';
 
-const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
-export default function Layout() {
-  const [layout, setLayout] = useState({});
+const ReactGridLayout = WidthProvider(RGL);
 
-  const onLayoutChange = (curL, newL) => {
-    setLayout(newL);
-  };
-
+export default function Layout({ layout, onLayoutChange, charts }) {
   return (
-    <div>
-      <ResponsiveReactGridLayout
+    <div style={{ width: '1200px', margin: '0 auto' }}>
+      <ReactGridLayout
         className="layout"
-        cols={{
-          lg: 12, md: 10, sm: 6, xs: 4, xxs: 2,
-        }}
-        rowHeight={30}
-        layouts={layout}
-        onLayoutChange={(curL, newL) => onLayoutChange(curL, newL)}
+
+        rowHeight={60}
+        layout={layout}
+        onLayoutChange={(lo) => onLayoutChange(lo)}
       >
-        <div
-          key="1"
-        >
-          <span className="text">1</span>
-        </div>
-        <div
-          key="2"
-        >
-          <span className="text">2</span>
-        </div>
-        <div
-          key="3"
-        >
-          <span className="text">3</span>
-        </div>
-        <div
-          key="4"
-        >
-          <span className="text">4</span>
-        </div>
-        <div
-          key="5"
-        >
-          <span className="text">5</span>
-        </div>
-      </ResponsiveReactGridLayout>
+        {charts.map((c) => (
+          <div key={c.i}>
+            <DashBoard />
+          </div>
+        ))}
+      </ReactGridLayout>
     </div>
   );
 }

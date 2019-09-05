@@ -12,7 +12,10 @@ export default function CreateReport() {
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
-    AddReport(formData, { name: txt }).then(() => {
+    AddReport(formData.id, {
+      name: txt,
+      charts: [],
+    }).then(() => {
       setModal({
         isOpen: false,
         modalName: 'createReport',

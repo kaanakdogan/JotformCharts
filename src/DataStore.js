@@ -1,11 +1,22 @@
 import localforage from 'localforage';
 
-export function GetReports() {
-  return localforage.getItem('Reports');
+let reports;
+
+export async function GetReports() {
+  if (reports) {
+    reports = await localforage.getItem('Reports');
+    if (!reports) {
+      reports = [];
+    }
+  } else {
+    reports = [];
+  }
+
+  return reports;
 }
 
 export async function GetFormReports(formId) {
-  const reports = await GetReports();
+  await GetReports();
 
   if (reports) {
     // eslint-disable-next-line eqeqeq
@@ -18,49 +29,45 @@ export async function GetFormReports(formId) {
 }
 
 export async function GetNextId(formId) {
-  const reports = await GetFormReports(formId);
-  if (reports) {
-    let rep = reports[0];
-    for (let i = 0; i < reports.length; i += 1) {
-      if (rep.id < reports[i].id) {
-        rep = reports[i];
+  const formReports = await GetFormReports(formId);
+  if (formReports) {
+    let rep = formReports[0];
+    for (let i = 0; i < formReports.length; i += 1) {
+      if (rep.id < formReports[i].id) {
+        rep = formReports[i];
       }
     }
 
+    console.log(rep.id);
     return rep.id;
   }
   return 0;
 }
 
 export async function AddReport(formId, report) {
+  reports = await GetReports();
   let formReports = await GetFormReports(formId);
-  let reports = await GetReports();
   if (!formReports) {
     formReports = [];
-  }
-  if (!reports) {
-    reports = [];
   }
   let id = await GetNextId(formId);
   id += 1;
   const newRep = report;
   newRep.id = id;
 
+  console.log(newRep.id);
   formReports.push(newRep);
 
-  const newReps = Object.values(reports).filter((r) => r.id !== formId.toString());
-  newReps.push({ id: formId, reports: formReports });
-  return localforage.setItem('Reports', newReps);
+  reports = Object.values(reports).filter((r) => r.id !== formId.toString());
+  reports.push({ id: formId, reports: formReports });
+  return localforage.setItem('Reports', reports);
 }
 
 export async function EditReport(formId, report) {
   let formReports = await GetFormReports(formId);
-  let reports = await GetReports();
+  reports = await GetReports();
   if (!formReports) {
     formReports = [];
-  }
-  if (!reports) {
-    reports = [];
   }
 
   formReports = formReports.filter((r) => r.id !== report.id);
@@ -72,7 +79,7 @@ export async function EditReport(formId, report) {
 }
 
 export async function RemoveReport(report) {
-  const reports = await GetReports();
+  await GetReports();
 
   const newReps = reports.filter((r) => r.id !== report.id);
   return localforage.setItem('Reports', newReps);
@@ -81,3 +88,16 @@ export async function RemoveReport(report) {
 export async function CleanDatabase() {
   return localforage.removeItem('Reports');
 }
+
+// Mockup data for Reports
+// [{
+//   formId: [{
+//     reportid:'123'
+//     charts: [{
+//       chardid:
+//       layout:
+//       options:
+//       questionIDs: [],
+//     }]
+//   }]
+// }]

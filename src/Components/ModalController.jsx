@@ -36,8 +36,24 @@ const CreateReportTheme = {
 };
 
 export default function ModalController() {
-  const [modal] = useContext(ModalContext);
+  const [modal, setModal] = useContext(ModalContext);
 
+  const pickForm = (e) => {
+    e.preventDefault();
+    setModal({
+      isOpen: true,
+      modalName: 'formSelect',
+      redirectUrl: '',
+    });
+  };
+
+  const goBack = () => {
+    setModal({
+      isOpen: false,
+      modalName: '',
+      redirectUrl: '',
+    });
+  };
 
   if (modal.modalName === 'createReport') {
     return (
@@ -48,7 +64,13 @@ export default function ModalController() {
   } if (modal.modalName === 'errorModal') {
     return (
       <ThemeProvider theme={CreateReportTheme}>
-        <ModalView header="Report Not Found"><a href="#/"> Go back ?</a></ModalView>
+        <ModalView header="Report Not Found"><a href={modal.redirectUrl} onClick={goBack}> Go back ?</a></ModalView>
+      </ThemeProvider>
+    );
+  } if (modal.modalName === 'unAuth') {
+    return (
+      <ThemeProvider theme={FullScreenTheme}>
+        <ModalView header="Unauthorized Access"><button type="button" onClick={pickForm}>Pick a Form ?</button></ModalView>
       </ThemeProvider>
     );
   }

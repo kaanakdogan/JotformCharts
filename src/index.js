@@ -6,14 +6,17 @@ import * as serviceWorker from './serviceWorker';
 import { AuthProvider } from './Contexts/AuthContext';
 import FormsProvider, { FormDataProvider } from './Contexts/FormsContext';
 import ModalProvider from './Contexts/ModalContext';
+import SubmissionsProvider from './Contexts/SubmissionsContext';
 
 ReactDOM.render(
   <FormsProvider>
     <AuthProvider>
       <FormDataProvider>
-        <ModalProvider>
-          <App />
-        </ModalProvider>
+        <SubmissionsProvider>
+          <ModalProvider>
+            <App />
+          </ModalProvider>
+        </SubmissionsProvider>
       </FormDataProvider>
     </AuthProvider>
   </FormsProvider>,
