@@ -7,8 +7,8 @@ import promisify from '../../Utils';
 import { GetFormReports, EditReport } from '../../DataStore';
 import Header from '../Header';
 import Tabs from '../Tabs';
-import Layout from '../ResponsiveLayout';
 import { SubmissionsContext } from '../../Contexts/SubmissionsContext';
+import ReportEditor from './ReportEditor';
 
 async function GetSubmissions(formId) {
   const submissions = await promisify(global.JF.getFormSubmissions)(formId);
@@ -28,7 +28,7 @@ export default function Report({ match }) {
         GetSubmissions(match.params.id).then((r) => setSubmissions(r));
         setData({
           id: match.params.id,
-          questions: res,
+          questions: Object.values(res),
         });
         setModal({
           isOpen: false,
@@ -88,7 +88,6 @@ export default function Report({ match }) {
   );
 }
 
-
 function ReportPicker({ reports, form, match }) {
   const [rep, setRep] = React.useState([]);
   const [, setModal] = React.useContext(ModalContext);
@@ -144,67 +143,3 @@ function ReportPicker({ reports, form, match }) {
 //   options: {},
 //   key: {},
 // }];
-
-
-function ReportEditor({ report, onReportEdit }) {
-  const [layouts, setLayouts] = React.useState(report.charts.map((l) => l.layout));
-  const [charts, setCharts] = React.useState(report.charts.map((l) => ({ i: l.key })));
-
-  React.useEffect(() => {
-    setLayouts(report.charts.map((l) => l.layout));
-    setCharts(report.charts.map((l) => ({ i: l.key })));
-  }, [report]);
-
-
-  const onLayoutsChange = (layout) => {
-    setLayouts(layout);
-  };
-
-  React.useEffect(() => {
-    const reportToReturn = JSON.parse(JSON.stringify(report));
-    reportToReturn.charts = [];
-    for (let c = 0; c < layouts.length; c++) {
-      const k = layouts[c].i;
-      reportToReturn.charts.push({
-        layout: layouts.filter((l) => l.i == k)[0],
-        key: k,
-      });
-    }
-
-    onReportEdit(reportToReturn);
-  }, [layouts]);
-
-  const add = () => {
-    const key = charts.reduce((a, b) => Math.max(a, b.i), 1) + 1;
-
-    const lo = {
-      i: String(key),
-      x: 0,
-      y: 0,
-      w: 4,
-      h: 4,
-      minW: 4,
-      minH: 4,
-    };
-
-    setCharts((old) => [...old, {
-      i: key,
-    }]);
-
-    setLayouts((old) => [...old, lo]);
-  };
-
-  const handleAdd = (e) => {
-    e.preventDefault();
-
-    add();
-  };
-
-  return (
-    <div>
-      <button type="button" onClick={handleAdd}>New Chart</button>
-
-      <Layout charts={charts} layout={layouts} onLayoutChange={onLayoutsChange} />
-    </div>
-  );
-}

@@ -1,7 +1,8 @@
 import React, { useRef, useEffect } from 'react';
-import Chart from 'chart.js';
-import getFeeds from './Test';
+import styled, { keyframes } from 'styled-components';
+import BarChart from './BarChart';
 import { SubmissionsContext } from '../../Contexts/SubmissionsContext';
+import Logo from '../../opt.svg';
 
 function mapQuestionAnswers(qid) {
   return function reducer(array, current) {
@@ -28,7 +29,9 @@ function mapQuestionAnswers(qid) {
   };
 }
 
-export default function DashBoard() {
+export default function ChartController({
+  children, onClick, index, setPanel,
+}) {
   const [submissions] = React.useContext(SubmissionsContext);
   const [data, setData] = React.useState([]);
 
@@ -37,58 +40,65 @@ export default function DashBoard() {
     setData(a);
   }, []);
 
+  const handleClick = (e) => {
+    console.log('Click from chart controller');
+    onClick(index);
+  };
+
   return (
-    <BarChart data={data} title="Single Choice" color="#70CAD1" />
+    <>
+      {children && children.length !== 0 ? <Toolbox setPanel={setPanel} /> : null}
+      <BarChart onClick={handleClick} data={data} title="Single Choice" color="#70CAD1" />
+    </>
   );
 }
 
-const opts = {
-  responsive: true,
-  maintainAspectRatio: false,
-  scales: {
-    yAxes: [{
-      ticks: {
-        min: 0,
-      },
-    }],
-  },
-
-};
-
-function BarChart(props) {
-  const canvasRef = useRef(null);
-  const myChart = useRef(null);
-
-  useEffect(() => {
-    myChart.current = new Chart(canvasRef.current, {
-      type: 'bar',
-      options: opts,
-      data: {
-        labels: props.data.map((d) => d.label),
-        datasets: [{
-          label: props.title,
-          data: props.data.map((d) => d.value),
-          backgroundColor: props.color,
-        }],
-      },
-    });
-  }, []);
-
-  useEffect(() => {
-    myChart.current.data = {
-      labels: props.data.map((d) => d.label),
-      datasets: [{
-        label: props.title,
-        data: props.data.map((d) => d.value),
-        backgroundColor: props.color,
-      }],
-    };
-    myChart.current.update();
-  }, [props]);
-
+function Toolbox({ setPanel }) {
+  const handleClick = () => {
+    setPanel();
+  };
   return (
-    <div style={{ position: 'relative', height: '100%', width: '100%' }}>
-      <canvas ref={canvasRef} />
-    </div>
+    <Options>
+      <Wrapper onClick={handleClick}>
+        <Img src={Logo} />
+      </Wrapper>
+    </Options>
   );
 }
+
+const Img = styled.img`
+  height: 15px;
+`;
+
+const Wrapper = styled.div`
+padding 5px;
+`;
+
+const Open = keyframes`
+0% {
+  right: 0;
+  opacity: 0;
+}
+
+50% {
+  opacity: 0;
+}
+100% {
+  right: -35px;
+  opacity: 1;
+}
+`;
+
+const Options = styled.div`
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  opacity: 0;
+  height: auto;
+  background-color: rgb(76, 127, 244);
+  cursor: default;
+  z-index: 1;
+  padding: 5px 0px;
+  border-radius: 4px;
+  animation: ${Open} 0.2s ease 0s 1 normal forwards running;
+`;
