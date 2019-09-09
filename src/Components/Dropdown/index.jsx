@@ -8,16 +8,16 @@ export default function Dropdown({ options, def, onSelect }) {
 
   React.useEffect(() => {
     setSelected(def);
-  }, [options]);
+  }, [options, def]);
 
   const toggleActive = () => {
     setActive(!isActive);
   };
 
-  const selectItem = (e) => {
-    setSelected(e.target.innerText);
+  const selectItem = (opt) => {
+    setSelected(opt.text);
     setActive(false);
-    onSelect(e.target.innerText);
+    onSelect(opt.qid);
   };
 
   const handleClickOutside = (e) => {
@@ -34,7 +34,6 @@ export default function Dropdown({ options, def, onSelect }) {
 
   return (
     <Styles.Wrapper ref={eventRef}>
-      {console.log(selected)}
       <Styles.ToggleBttn role="button" onClick={toggleActive}>
         <Styles.ToggleContent>
           {selected}
@@ -44,10 +43,20 @@ export default function Dropdown({ options, def, onSelect }) {
         ? (
           <Styles.DropviewContent>
             <Styles.DropviewList>
-              {options.map((opt) => <Styles.DropviewListItem key={opt.qid} onClick={selectItem}>{opt}</Styles.DropviewListItem>)}
+              {options.map((opt) => <ListItem opt={opt} onClick={selectItem} />)}
             </Styles.DropviewList>
           </Styles.DropviewContent>
         ) : null}
     </Styles.Wrapper>
+  );
+}
+
+function ListItem({ opt, onClick }) {
+  const handleClick = (e) => {
+    onClick(opt);
+  };
+
+  return (
+    <Styles.DropviewListItem key={opt.qid} onClick={handleClick}>{opt.text}</Styles.DropviewListItem>
   );
 }

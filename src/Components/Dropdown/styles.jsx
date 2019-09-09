@@ -59,7 +59,9 @@ margin: 0;
 padding: 0;
 `;
 
-export const DropviewListItem = styled.li`
+export const DropviewListItem = styled.li.attrs((props) => ({
+  key: props.key,
+}))`
 cursor: pointer;
 color: #000;
 text-align: left;

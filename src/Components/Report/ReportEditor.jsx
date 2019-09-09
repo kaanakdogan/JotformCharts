@@ -10,6 +10,8 @@ export default function ReportEditor({ report, onReportEdit }) {
   const [charts, setCharts] = React.useState(report.charts.map((l) => ({ i: l.key })));
   const [panel, setPanel] = React.useState(false);
   const [questions, setQuestions] = React.useState([]);
+  const [selected, setSelected] = React.useState();
+
 
   React.useEffect(() => {
     const qs = data.questions.filter((q) => q.type === 'control_datetime'
@@ -57,6 +59,9 @@ export default function ReportEditor({ report, onReportEdit }) {
 
     setCharts((old) => [...old, {
       i: key,
+      options: {
+        qid: '3',
+      },
     }]);
 
     setLayouts((old) => [...old, lo]);
@@ -71,17 +76,33 @@ export default function ReportEditor({ report, onReportEdit }) {
   const togglePanel = () => {
     setPanel(!panel);
   };
+
+  const setSelectedQuestion = (qid) => {
+    const newCharts = charts.map((c) => {
+      if (c.i === selected) {
+        const newC = c;
+        newC.options.qid = qid;
+
+        return newC;
+      }
+
+      return c;
+    });
+
+    setCharts(newCharts);
+  };
+
   return (
     <div>
       <button type="button" onClick={handleAdd}>New Chart</button>
       <Styles.FlexContainer>
         <Styles.MainItem>
           <div style={{ width: '100%' }}>
-            <Layout charts={charts} layout={layouts} onLayoutChange={onLayoutsChange} setPanel={togglePanel} />
+            <Layout charts={charts} layout={layouts} onLayoutChange={onLayoutsChange} setPanel={togglePanel} chartSelection={[selected, setSelected]} />
           </div>
         </Styles.MainItem>
         <Styles.RightItem isVisible={panel}>
-          <RightPanel questions={questions} />
+          <RightPanel chart={charts.find((c) => c.i == selected)} questions={questions} setSelected={setSelectedQuestion} />
         </Styles.RightItem>
       </Styles.FlexContainer>
     </div>

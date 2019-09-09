@@ -30,15 +30,17 @@ function mapQuestionAnswers(qid) {
 }
 
 export default function ChartController({
-  children, onClick, index, setPanel,
+  children, onClick, index, setPanel, opts,
 }) {
   const [submissions] = React.useContext(SubmissionsContext);
   const [data, setData] = React.useState([]);
 
   useEffect(() => {
-    const a = submissions.reduce(mapQuestionAnswers('6'), []);
+    console.log('here');
+    const a = submissions.reduce(mapQuestionAnswers(opts.qid), []);
+    console.log(a);
     setData(a);
-  }, []);
+  }, [opts.qid]);
 
   const handleClick = (e) => {
     console.log('Click from chart controller');
@@ -47,6 +49,7 @@ export default function ChartController({
 
   return (
     <>
+      {console.log(opts.qid)}
       {children && children.length !== 0 ? <Toolbox setPanel={setPanel} /> : null}
       <BarChart onClick={handleClick} data={data} title="Single Choice" color="#70CAD1" />
     </>
@@ -57,6 +60,7 @@ function Toolbox({ setPanel }) {
   const handleClick = () => {
     setPanel();
   };
+
   return (
     <Options>
       <Wrapper onClick={handleClick}>
