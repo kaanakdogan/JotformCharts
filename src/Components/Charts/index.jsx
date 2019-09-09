@@ -3,53 +3,28 @@ import styled, { keyframes } from 'styled-components';
 import BarChart from './BarChart';
 import { SubmissionsContext } from '../../Contexts/SubmissionsContext';
 import Logo from '../../opt.svg';
-
-function mapQuestionAnswers(qid) {
-  return function reducer(array, current) {
-    if (!array) {
-      array = [];
-    }
-
-    if (array.filter((o) => o.label === current.answers[qid].answer).length !== 0) {
-      array.map((cur) => {
-        if (cur.label === current.answers[qid].answer) {
-          return cur.value++;
-        }
-        return cur;
-      });
-
-      return array;
-    }
-
-    array.push({
-      label: current.answers[qid].answer,
-      value: 1,
-    });
-    return array;
-  };
-}
+import mapQuestionAnswers from './Utils';
+import { FormDataContext } from '../../Contexts/FormsContext';
 
 export default function ChartController({
   children, onClick, index, setPanel, opts,
 }) {
   const [submissions] = React.useContext(SubmissionsContext);
+  const [formData] = React.useContext(FormDataContext);
   const [data, setData] = React.useState([]);
 
   useEffect(() => {
-    console.log('here');
-    const a = submissions.reduce(mapQuestionAnswers(opts.qid), []);
-    console.log(a);
+    console.log({ submissions });
+    const a = submissions.reduce(mapQuestionAnswers(opts.qid, formData.id), []);
     setData(a);
   }, [opts.qid]);
 
   const handleClick = (e) => {
-    console.log('Click from chart controller');
     onClick(index);
   };
 
   return (
     <>
-      {console.log(opts.qid)}
       {children && children.length !== 0 ? <Toolbox setPanel={setPanel} /> : null}
       <BarChart onClick={handleClick} data={data} title="Single Choice" color="#70CAD1" />
     </>
