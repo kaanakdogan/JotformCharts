@@ -55,13 +55,10 @@ function handleMultiChoice(array, submission) {
     return array;
   }
 
-  console.log({ array, answers: submission.answer });
 
   for (let i = 0; i < submission.answer.length; i++) {
     const myArr = array.filter((cur) => cur.label === submission.answer[i]);
-    console.log({ array, myArr });
     if (myArr.length === 0) {
-      console.log('here');
       array.push({
         label: submission.answer[i],
         value: 0,
@@ -84,14 +81,40 @@ export default function mapQuestionAnswers(qid) {
     if (!array) {
       array = [];
     }
-    // debugger;
-
-    console.log(array);
 
     if (current.answers[qid].type === 'control_checkbox') {
       return handleMultiChoice(array, current.answers[qid]);
     }
 
     return handleSingleChoice(array, current.answers[qid]);
+  };
+}
+
+export function mapSubmissionsByDate() {
+  return function reducer(array, current) {
+    if (!array) {
+      array = [];
+    }
+
+    const label = current.created_at.split(' ')[0];
+    // console.log({ aray array.find((o) => o.label === label), label });
+
+    const cur = array.find((o) => o.label === label);
+
+    if (array.filter((o) => o.label === label).length === 0) {
+      array.push({
+        label,
+        value: 1,
+      });
+    } else {
+      array.map((o) => {
+        if (o.label === label) {
+          return o.value++;
+        }
+        return o;
+      });
+    }
+
+    return array;
   };
 }

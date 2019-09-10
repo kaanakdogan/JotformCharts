@@ -2,7 +2,9 @@ import React from 'react';
 import * as Styles from './styles';
 import Dropdown from '../Dropdown';
 
-export default function RightPanel({ chart, questions, setSelected }) {
+export default function RightPanel({
+  chart, questions, setSelected, setChartType,
+}) {
   const [options, setOptions] = React.useState([]);
 
   React.useEffect(() => {
@@ -10,8 +12,12 @@ export default function RightPanel({ chart, questions, setSelected }) {
     setOptions(qs);
   }, [questions]);
 
-  const onSelect = (qid) => {
+  const onQuestionSelect = (qid) => {
     setSelected(qid);
+  };
+
+  const onChartTypeSelect = (type) => {
+    setChartType(type);
   };
 
   const def = () => {
@@ -24,7 +30,9 @@ export default function RightPanel({ chart, questions, setSelected }) {
   return (
     <div style={{ width: '100%' }}>
       <p>Chart Options</p>
-      <Dropdown def={def()} options={questions} onSelect={onSelect} />
+      <Dropdown def={chart ? chart.options.type : 'Bar'} options={[{ qid: 'bar', text: 'Bar' }, { qid: 'pie', text: 'Pie' }]} onSelect={onChartTypeSelect} />
+
+      <Dropdown def={def()} options={questions} onSelect={onQuestionSelect} />
     </div>
   );
 }

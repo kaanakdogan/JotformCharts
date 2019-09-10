@@ -16,6 +16,8 @@ export default function Layout({
     setSelected(key);
   };
 
+  React.useEffect(() => console.log(charts), [charts]);
+
   React.useEffect(() => {
     setSelected(null);
   }, [data]);

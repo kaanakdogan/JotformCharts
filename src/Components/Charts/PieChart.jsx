@@ -1,28 +1,13 @@
 import React, { useRef, useEffect } from 'react';
 import Chart from 'chart.js';
 
-const opts = {
-  responsive: true,
-  maintainAspectRatio: false,
-  scales: {
-    yAxes: [{
-      ticks: {
-        min: 0,
-      },
-    }],
-  },
-
-};
-
-
-export default function BarChart(props) {
+export default function PieChart(props) {
   const canvasRef = useRef(null);
   const myChart = useRef(null);
 
   useEffect(() => {
     myChart.current = new Chart(canvasRef.current, {
-      type: 'bar',
-      options: opts,
+      type: 'pie',
       data: {
         labels: props.data.map((d) => d.label),
         datasets: [{

@@ -25,11 +25,11 @@ export default function Report({ match }) {
     const prom = promisify(global.JF.getFormQuestions);
     prom(match.params.id)
       .then((res) => {
-        GetSubmissions(match.params.id).then((r) => setSubmissions(r));
         setData({
           id: match.params.id,
           questions: Object.values(res),
         });
+        GetSubmissions(match.params.id).then((r) => setSubmissions(r));
         setModal({
           isOpen: false,
           modalName: '',

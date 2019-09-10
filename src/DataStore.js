@@ -38,7 +38,6 @@ export async function GetNextId(formId) {
       }
     }
 
-    console.log(rep.id);
     return rep.id;
   }
   return 0;
@@ -55,7 +54,6 @@ export async function AddReport(formId, report) {
   const newRep = report;
   newRep.id = id;
 
-  console.log(newRep.id);
   formReports.push(newRep);
 
   reports = Object.values(reports).filter((r) => r.id !== formId.toString());

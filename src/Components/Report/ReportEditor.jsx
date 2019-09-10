@@ -7,7 +7,7 @@ import { FormDataContext } from '../../Contexts/FormsContext';
 export default function ReportEditor({ report, onReportEdit }) {
   const [data] = React.useContext(FormDataContext);
   const [layouts, setLayouts] = React.useState(report.charts.map((l) => l.layout));
-  const [charts, setCharts] = React.useState(report.charts.map((l) => ({ i: l.key })));
+  const [charts, setCharts] = React.useState(report.charts);
   const [panel, setPanel] = React.useState(false);
   const [questions, setQuestions] = React.useState([]);
   const [selected, setSelected] = React.useState();
@@ -23,7 +23,7 @@ export default function ReportEditor({ report, onReportEdit }) {
 
   React.useEffect(() => {
     setLayouts(report.charts.map((l) => l.layout));
-    setCharts(report.charts.map((l) => ({ i: l.key })));
+    setCharts(report.charts);
   }, [report]);
 
   React.useEffect(() => {
@@ -33,12 +33,12 @@ export default function ReportEditor({ report, onReportEdit }) {
       const k = layouts[c].i;
       reportToReturn.charts.push({
         layout: layouts.filter((l) => l.i == k)[0],
-        key: k,
+        i: k,
+        options: charts[c].options,
       });
     }
-
     onReportEdit(reportToReturn);
-  }, [layouts]);
+  }, [layouts, charts]);
 
   const onLayoutsChange = (layout) => {
     setLayouts(layout);
@@ -61,6 +61,7 @@ export default function ReportEditor({ report, onReportEdit }) {
       i: key,
       options: {
         qid: '3',
+        type: 'bar',
       },
     }]);
 
@@ -92,6 +93,21 @@ export default function ReportEditor({ report, onReportEdit }) {
     setCharts(newCharts);
   };
 
+  const setChartType = (type) => {
+    const newCharts = charts.map((c) => {
+      if (c.i === selected) {
+        const newC = c;
+        newC.options.type = type;
+
+        return newC;
+      }
+
+      return c;
+    });
+
+    setCharts(newCharts);
+  };
+
   return (
     <div>
       <button type="button" onClick={handleAdd}>New Chart</button>
@@ -102,7 +118,14 @@ export default function ReportEditor({ report, onReportEdit }) {
           </div>
         </Styles.MainItem>
         <Styles.RightItem isVisible={panel}>
-          <RightPanel chart={charts.find((c) => c.i == selected)} questions={questions} setSelected={setSelectedQuestion} />
+          {questions && questions.length !== 0 ? (
+            <RightPanel
+              chart={charts.find((c) => c.i == selected)}
+              questions={questions}
+              setSelected={setSelectedQuestion}
+              setChartType={setChartType}
+            />
+          ) : null}
         </Styles.RightItem>
       </Styles.FlexContainer>
     </div>

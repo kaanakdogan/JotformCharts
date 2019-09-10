@@ -3,8 +3,9 @@ import styled, { keyframes } from 'styled-components';
 import BarChart from './BarChart';
 import { SubmissionsContext } from '../../Contexts/SubmissionsContext';
 import Logo from '../../opt.svg';
-import mapQuestionAnswers from './Utils';
+import mapQuestionAnswers, { mapSubmissionsByDate } from './Utils';
 import { FormDataContext } from '../../Contexts/FormsContext';
+import PieChart from './PieChart';
 
 export default function ChartController({
   children, onClick, index, setPanel, opts,
@@ -12,23 +13,49 @@ export default function ChartController({
   const [submissions] = React.useContext(SubmissionsContext);
   const [formData] = React.useContext(FormDataContext);
   const [data, setData] = React.useState([]);
+  // const chartsDone
 
   useEffect(() => {
-    console.log({ submissions });
     const a = submissions.reduce(mapQuestionAnswers(opts.qid, formData.id), []);
+    // const a = submissions.reduce(mapSubmissionsByDate(), []);
     setData(a);
-  }, [opts.qid]);
+  }, []);
 
   const handleClick = (e) => {
     onClick(index);
   };
 
-  return (
-    <>
-      {children && children.length !== 0 ? <Toolbox setPanel={setPanel} /> : null}
-      <BarChart onClick={handleClick} data={data} title="Single Choice" color="#70CAD1" />
-    </>
-  );
+  if (opts) {
+    if (opts.type === 'bar') {
+      return (
+        <>
+          {children && children.length !== 0 ? <Toolbox setPanel={setPanel} /> : null}
+          <BarChart
+            onClick={handleClick}
+            data={data}
+            title={Object.values(formData.questions).find((q) => q.qid === opts.qid).text}
+            color="#70CAD1"
+          />
+        </>
+      );
+    }
+
+    if (opts.type === 'pie') {
+      return (
+        <>
+          {children && children.length !== 0 ? <Toolbox setPanel={setPanel} /> : null}
+          <PieChart
+            onClick={handleClick}
+            data={data}
+            title={Object.values(formData.questions).find((q) => q.qid === opts.qid).text}
+            color={['#a8e0ff', '#8ee3f5', '#70cad1', '#3e517a', '#b08ea2', '#BBB6DF']}
+          />
+        </>
+      );
+    }
+  }
+
+  return null;
 }
 
 function Toolbox({ setPanel }) {
