@@ -44,7 +44,7 @@ export default function BarChart(props) {
       }],
     };
     myChart.current.update();
-  }, [props]);
+  }, [props.data, props.title, props.color]);
 
   const handleClick = (e) => {
     props.onClick();

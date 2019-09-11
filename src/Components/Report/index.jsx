@@ -15,7 +15,7 @@ async function GetSubmissions(formId) {
   return submissions;
 }
 
-export default function Report({ match }) {
+export default function Reports({ match }) {
   const [, setData] = React.useContext(FormDataContext);
   const [, setSubmissions] = React.useContext(SubmissionsContext);
   const [modal, setModal] = React.useContext(ModalContext);

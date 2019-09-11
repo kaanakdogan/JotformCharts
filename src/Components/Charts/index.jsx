@@ -3,9 +3,10 @@ import styled, { keyframes } from 'styled-components';
 import BarChart from './BarChart';
 import { SubmissionsContext } from '../../Contexts/SubmissionsContext';
 import Logo from '../../opt.svg';
-import mapQuestionAnswers, { mapSubmissionsByDate } from './Utils';
+import mapQuestionAnswers, { mapSubmissionsByDate, getAvarageByDate, getHighestByDate } from './Utils';
 import { FormDataContext } from '../../Contexts/FormsContext';
 import PieChart from './PieChart';
+import LineChart from './LineChart';
 
 export default function ChartController({
   children, onClick, index, setPanel, opts,
@@ -13,13 +14,30 @@ export default function ChartController({
   const [submissions] = React.useContext(SubmissionsContext);
   const [formData] = React.useContext(FormDataContext);
   const [data, setData] = React.useState([]);
-  // const chartsDone
 
   useEffect(() => {
-    const a = submissions.reduce(mapQuestionAnswers(opts.qid, formData.id), []);
-    // const a = submissions.reduce(mapSubmissionsByDate(), []);
-    setData(a);
-  }, []);
+    let d;
+    switch (opts.dataType) {
+      case '1':
+        d = submissions.reduce(mapQuestionAnswers(opts.qid), []);
+        break;
+      case '2':
+        d = submissions.reduce(mapSubmissionsByDate(), []);
+        break;
+      case '3':
+        d = getAvarageByDate(opts.qid, submissions);
+        break;
+      case '4':
+        d = getHighestByDate(opts.qid, submissions);
+        break;
+      default:
+        d = submissions.reduce(mapQuestionAnswers(opts.qid), []);
+        break;
+    }
+
+    setData(d);
+    console.log(d);
+  }, [opts.qid, opts.dataType, opts.type]);
 
   const handleClick = (e) => {
     onClick(index);
@@ -33,7 +51,7 @@ export default function ChartController({
           <BarChart
             onClick={handleClick}
             data={data}
-            title={Object.values(formData.questions).find((q) => q.qid === opts.qid).text}
+            title={opts.dataType == 2 ? ' Submission Count Per Day' : Object.values(formData.questions).find((q) => q.qid === opts.qid).text}
             color="#70CAD1"
           />
         </>
@@ -47,13 +65,28 @@ export default function ChartController({
           <PieChart
             onClick={handleClick}
             data={data}
-            title={Object.values(formData.questions).find((q) => q.qid === opts.qid).text}
+            title={opts.dataType == 2 ? ' Submission Count Per Day' : Object.values(formData.questions).find((q) => q.qid === opts.qid).text}
             color={['#a8e0ff', '#8ee3f5', '#70cad1', '#3e517a', '#b08ea2', '#BBB6DF']}
           />
         </>
       );
     }
   }
+
+  if (opts.type === 'line') {
+    return (
+      <>
+        {children && children.length !== 0 ? <Toolbox setPanel={setPanel} /> : null}
+        <LineChart
+          onClick={handleClick}
+          data={data}
+          title={opts.dataType == 2 ? ' Submission Count Per Day' : Object.values(formData.questions).find((q) => q.qid === opts.qid).text}
+          color="#3E517A"
+        />
+      </>
+    );
+  }
+
 
   return null;
 }

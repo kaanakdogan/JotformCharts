@@ -24,7 +24,6 @@ function Login() {
 
   useEffect(() => {
     const prom = promisify(global.JF.getUser);
-    CleanDatabase();
     prom()
       .then(() => {
         setAuth(true);

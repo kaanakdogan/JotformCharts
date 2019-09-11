@@ -1,16 +1,25 @@
 import React, { useRef, useEffect } from 'react';
 import Chart from 'chart.js';
 
-export default function PieChart(props) {
+export default function LineChart(props) {
   const canvasRef = useRef(null);
   const myChart = useRef(null);
 
   useEffect(() => {
     myChart.current = new Chart(canvasRef.current, {
-      type: 'pie',
+      type: 'line',
       options: {
         responsive: true,
         maintainAspectRatio: false,
+        scales: {
+          yAxes: [
+            {
+              ticks: {
+                min: 0,
+              },
+            },
+          ],
+        },
       },
       data: {
         labels: props.data.map((d) => d.label),
@@ -18,6 +27,11 @@ export default function PieChart(props) {
           label: props.title,
           data: props.data.map((d) => d.value),
           backgroundColor: props.color,
+          pointRadius: 2,
+          fill: 'false',
+          borderColor: props.color,
+          borderWidth: 1,
+          lineTension: 0,
         }],
       },
     });
@@ -30,6 +44,11 @@ export default function PieChart(props) {
         label: props.title,
         data: props.data.map((d) => d.value),
         backgroundColor: props.color,
+        pointRadius: 2,
+        fill: 'false',
+        borderColor: props.color,
+        borderWidth: 1,
+        lineTension: 0,
       }],
     };
     myChart.current.update();
@@ -41,7 +60,7 @@ export default function PieChart(props) {
 
   return (
     <div onClick={handleClick} style={{ position: 'relative', height: '100%', width: '100%' }}>
-      <canvas style={{ padding: '15px' }} ref={canvasRef} />
+      <canvas ref={canvasRef} />
     </div>
   );
 }

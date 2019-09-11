@@ -2,30 +2,19 @@ import React from 'react';
 import Layout from '../ResponsiveLayout';
 import * as Styles from './styles';
 import RightPanel from './RightPanel';
-import { FormDataContext } from '../../Contexts/FormsContext';
 
 export default function ReportEditor({ report, onReportEdit }) {
-  const [data] = React.useContext(FormDataContext);
   const [layouts, setLayouts] = React.useState(report.charts.map((l) => l.layout));
   const [charts, setCharts] = React.useState(report.charts);
   const [panel, setPanel] = React.useState(false);
-  const [questions, setQuestions] = React.useState([]);
   const [selected, setSelected] = React.useState();
-
-
-  React.useEffect(() => {
-    const qs = data.questions.filter((q) => q.type === 'control_datetime'
-        || q.type === 'control_time' || q.type === 'control_dropdown'
-        || q.type === 'control_radio' || q.type === 'control_checkbox');
-
-    setQuestions(qs);
-  }, []);
 
   React.useEffect(() => {
     setLayouts(report.charts.map((l) => l.layout));
     setCharts(report.charts);
   }, [report]);
 
+  // Save layout and charts on editing either of those.
   React.useEffect(() => {
     const reportToReturn = JSON.parse(JSON.stringify(report));
     reportToReturn.charts = [];
@@ -47,16 +36,6 @@ export default function ReportEditor({ report, onReportEdit }) {
   const add = () => {
     const key = charts.reduce((a, b) => Math.max(a, b.i), 1) + 1;
 
-    const lo = {
-      i: String(key),
-      x: 0,
-      y: 0,
-      w: 4,
-      h: 4,
-      minW: 4,
-      minH: 4,
-    };
-
     setCharts((old) => [...old, {
       i: key,
       options: {
@@ -65,7 +44,15 @@ export default function ReportEditor({ report, onReportEdit }) {
       },
     }]);
 
-    setLayouts((old) => [...old, lo]);
+    setLayouts((old) => [...old, {
+      i: String(key),
+      x: 0,
+      y: 0,
+      w: 4,
+      h: 4,
+      minW: 4,
+      minH: 4,
+    }]);
   };
 
   const handleAdd = (e) => {
@@ -83,6 +70,21 @@ export default function ReportEditor({ report, onReportEdit }) {
       if (c.i === selected) {
         const newC = c;
         newC.options.qid = qid;
+
+        return newC;
+      }
+
+      return c;
+    });
+
+    setCharts(newCharts);
+  };
+
+  const setDataType = (type) => {
+    const newCharts = charts.map((c) => {
+      if (c.i === selected) {
+        const newC = c;
+        newC.options.dataType = type;
 
         return newC;
       }
@@ -114,18 +116,24 @@ export default function ReportEditor({ report, onReportEdit }) {
       <Styles.FlexContainer>
         <Styles.MainItem>
           <div style={{ width: '100%' }}>
-            <Layout charts={charts} layout={layouts} onLayoutChange={onLayoutsChange} setPanel={togglePanel} chartSelection={[selected, setSelected]} />
+            <Layout
+              charts={charts}
+              layout={layouts}
+              onLayoutChange={onLayoutsChange}
+              setPanel={togglePanel}
+              chartSelection={[selected, setSelected]}
+            />
           </div>
         </Styles.MainItem>
         <Styles.RightItem isVisible={panel}>
-          {questions && questions.length !== 0 ? (
+          {(
             <RightPanel
               chart={charts.find((c) => c.i == selected)}
-              questions={questions}
               setSelected={setSelectedQuestion}
               setChartType={setChartType}
+              setDataType={setDataType}
             />
-          ) : null}
+          )}
         </Styles.RightItem>
       </Styles.FlexContainer>
     </div>

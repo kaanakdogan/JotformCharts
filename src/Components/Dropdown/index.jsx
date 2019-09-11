@@ -15,9 +15,9 @@ export default function Dropdown({ options, def, onSelect }) {
   };
 
   const selectItem = (opt) => {
-    setSelected(opt.text);
     setActive(false);
     onSelect(opt.qid);
+    setSelected(opt.text);
   };
 
   const handleClickOutside = (e) => {
@@ -43,7 +43,7 @@ export default function Dropdown({ options, def, onSelect }) {
         ? (
           <Styles.DropviewContent>
             <Styles.DropviewList>
-              {options.map((opt) => <ListItem opt={opt} onClick={selectItem} />)}
+              {options.map((opt) => <ListItem opt={opt} onClick={selectItem} selected={selected} />)}
             </Styles.DropviewList>
           </Styles.DropviewContent>
         ) : null}
@@ -51,12 +51,12 @@ export default function Dropdown({ options, def, onSelect }) {
   );
 }
 
-function ListItem({ opt, onClick }) {
+function ListItem({ opt, onClick, selected }) {
   const handleClick = (e) => {
     onClick(opt);
   };
 
   return (
-    <Styles.DropviewListItem key={opt.qid} onClick={handleClick}>{opt.text}</Styles.DropviewListItem>
+    <Styles.DropviewListItem key={opt.qid} onClick={handleClick} selected={selected === opt.text}>{opt.text}</Styles.DropviewListItem>
   );
 }

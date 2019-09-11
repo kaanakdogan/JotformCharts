@@ -76,6 +76,29 @@ function handleMultiChoice(array, submission) {
   return array;
 }
 
+function handleRating(array, submission) {
+  if (!submission.answer) {
+    return array;
+  }
+
+  if (array.length !== submission.stars + 1) {
+    for (let i = 0; i <= submission.stars; i++) {
+      if (!array.find((a) => a.label == i)) {
+        array.push({ label: i, value: 0 });
+      }
+    }
+  }
+
+  array.map((cur) => {
+    if (cur.label == submission.answer) {
+      return cur.value++;
+    }
+    return cur;
+  });
+
+  return array;
+}
+
 export default function mapQuestionAnswers(qid) {
   return function reducer(array, current) {
     if (!array) {
@@ -84,6 +107,10 @@ export default function mapQuestionAnswers(qid) {
 
     if (current.answers[qid].type === 'control_checkbox') {
       return handleMultiChoice(array, current.answers[qid]);
+    }
+
+    if (current.answers[qid].type === 'control_rating') {
+      return handleRating(array, current.answers[qid]);
     }
 
     return handleSingleChoice(array, current.answers[qid]);
@@ -97,9 +124,6 @@ export function mapSubmissionsByDate() {
     }
 
     const label = current.created_at.split(' ')[0];
-    // console.log({ aray array.find((o) => o.label === label), label });
-
-    const cur = array.find((o) => o.label === label);
 
     if (array.filter((o) => o.label === label).length === 0) {
       array.push({
@@ -117,4 +141,114 @@ export function mapSubmissionsByDate() {
 
     return array;
   };
+}
+
+export function getAvarageByDate(qid, submissions) {
+  console.log(submissions);
+  function reducer(array, current) {
+    if (!array) {
+      array = [];
+    }
+
+    if (!current.answers[qid].answer) {
+      return array;
+    }
+
+    const date = current.created_at.split(' ')[0];
+
+    if (array.find((e) => e.date === date)) {
+      array.map((e) => {
+        if (e.date === date) {
+          const newArr = [...(e.values)];
+          newArr.push(current.answers[qid].answer);
+          e.values = newArr;
+          return e.values;
+        }
+
+        return e;
+      });
+    } else {
+      array.push({
+        date,
+        values: [current.answers[qid].answer],
+      });
+    }
+
+    return array;
+  }
+
+  const data = submissions.reduce(reducer, []);
+
+  const toReturn = [];
+  for (let i = 0; i < data.length; i++) {
+    let c = 0;
+    let av = 0;
+    for (c; c < data[i].values.length; c++) {
+      av += Number(data[i].values[c]);
+    }
+
+    av /= c;
+    toReturn.push({
+      label: data[i].date,
+      value: av,
+    });
+  }
+
+  return toReturn;
+}
+
+
+export function getHighestByDate(qid, submissions) {
+  console.log(submissions);
+  function reducer(array, current) {
+    if (!array) {
+      array = [];
+    }
+
+    if (!current.answers[qid].answer) {
+      return array;
+    }
+
+    const date = current.created_at.split(' ')[0];
+
+    if (array.find((e) => e.date === date)) {
+      array.map((e) => {
+        if (e.date === date) {
+          const newArr = [...(e.values)];
+          newArr.push(current.answers[qid].answer);
+          e.values = newArr;
+          return e.values;
+        }
+
+        return e;
+      });
+    } else {
+      array.push({
+        date,
+        values: [current.answers[qid].answer],
+      });
+    }
+
+    return array;
+  }
+
+  const data = submissions.reduce(reducer, []);
+
+  const toReturn = [];
+  for (let i = 0; i < data.length; i++) {
+    let c = 0;
+    let highest = 0;
+    for (c; c < data[i].values.length; c++) {
+      if (highest < Number(data[i].values[c])) {
+        highest = Number(data[i].values[c]);
+      }
+    }
+
+    toReturn.push({
+      label: data[i].date,
+      value: highest,
+    });
+  }
+
+  return toReturn;
 }

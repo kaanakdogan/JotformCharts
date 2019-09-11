@@ -63,7 +63,8 @@ export const DropviewListItem = styled.li.attrs((props) => ({
   key: props.key,
 }))`
 cursor: pointer;
-color: #000;
+color: ${(props) => (props.selected ? '#fff' : '#000')};
+background: ${(props) => (props.selected ? '#2f90ff' : '#fff')};
 text-align: left;
 padding: 6px 10px;
 font-size: 14px;

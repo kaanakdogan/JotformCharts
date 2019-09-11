@@ -31,6 +31,7 @@ export default function CreateReport() {
           type="text"
           name="name"
           placeholder="New Report"
+          autoComplete="off"
           onChange={(e) => setName(e.target.value)}
           value={txt}
           required
