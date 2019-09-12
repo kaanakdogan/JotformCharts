@@ -41,6 +41,7 @@ export default function ReportEditor({ report, onReportEdit }) {
       options: {
         qid: '3',
         type: 'bar',
+        colors: ['#a8e0ff', '#8ee3f5', '#70cad1', '#3e517a', '#b08ea2', '#BBB6DF'],
       },
     }]);
 
@@ -63,6 +64,17 @@ export default function ReportEditor({ report, onReportEdit }) {
 
   const togglePanel = () => {
     setPanel(!panel);
+  };
+
+  const deleteChart = (key) => {
+    const newCharts = charts.filter((c) => c.i !== key);
+    const newLayouts = layouts.filter((l) => Number(l.i) !== key);
+    console.log(key);
+    console.log({ newCharts, charts });
+    console.log({ newLayouts, layouts });
+
+    setCharts(newCharts);
+    setLayouts(newLayouts);
   };
 
   const setSelectedQuestion = (qid) => {
@@ -110,6 +122,21 @@ export default function ReportEditor({ report, onReportEdit }) {
     setCharts(newCharts);
   };
 
+  const setColors = (cols) => {
+    const newCharts = charts.map((c) => {
+      if (c.i === selected) {
+        const newC = c;
+        newC.options.colors = cols;
+
+        return newC;
+      }
+
+      return c;
+    });
+
+    setCharts(newCharts);
+  };
+
   return (
     <div>
       <button type="button" onClick={handleAdd}>New Chart</button>
@@ -121,6 +148,7 @@ export default function ReportEditor({ report, onReportEdit }) {
               layout={layouts}
               onLayoutChange={onLayoutsChange}
               setPanel={togglePanel}
+              deleteChart={deleteChart}
               chartSelection={[selected, setSelected]}
             />
           </div>
@@ -132,6 +160,7 @@ export default function ReportEditor({ report, onReportEdit }) {
               setSelected={setSelectedQuestion}
               setChartType={setChartType}
               setDataType={setDataType}
+              setColors={setColors}
             />
           )}
         </Styles.RightItem>

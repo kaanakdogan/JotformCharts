@@ -2,9 +2,10 @@ import React from 'react';
 import * as Styles from './styles';
 import { FormDataContext } from '../../Contexts/FormsContext';
 import Dropdown from '../Dropdown';
+import ColorPicker from '../ColorPicker';
 
 export default function RightPanel({
-  chart, setSelected, setChartType, setDataType,
+  chart, setSelected, setChartType, setDataType, setColors,
 }) {
   const [options, setOptions] = React.useState([]);
   const [questions, setQuestions] = React.useState([]);
@@ -118,12 +119,21 @@ export default function RightPanel({
     return questions.map((q) => q.text)[0];
   };
 
+  const def4 = () => {
+    if (chart && chart.options) {
+      return chart.options.colors;
+    }
+
+    return ['#a8e0ff', '#8ee3f5', '#70cad1', '#3e517a', '#b08ea2', '#BBB6DF'];
+  };
+
   return (
     <div style={{ width: '100%' }}>
       <p>Chart Options</p>
       <Dropdown def={def()} options={typeOptions} onSelect={onChartTypeSelect} />
       <Dropdown def={def2()} options={dataOptions} onSelect={onDataTypeSelect} />
       {questions ? <Dropdown def={def3()} options={questions} onSelect={onQuestionSelect} /> : null}
+      <ColorPicker isMultiple={chart && chart.options.type === 'pie'} colors={def4()} onColorsChange={setColors} />
     </div>
   );
 }

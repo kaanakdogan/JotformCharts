@@ -7,13 +7,19 @@ import { FormDataContext } from '../../Contexts/FormsContext';
 const ReactGridLayout = WidthProvider(RGL);
 
 export default function Layout({
-  layout, onLayoutChange, charts, setPanel, chartSelection,
+  layout, onLayoutChange, charts, setPanel, chartSelection, deleteChart,
 }) {
   const [data] = React.useContext(FormDataContext);
   const [selected, setSelected] = chartSelection;
 
   const selectChart = (key) => {
     setSelected(key);
+  };
+
+  const delChart = () => {
+    deleteChart(selected);
+    setSelected(null);
+    setPanel();
   };
 
   React.useEffect(() => console.log(charts), [charts]);
@@ -35,7 +41,7 @@ export default function Layout({
         >
           {charts.map((c) => (
             <div key={c.i}>
-              <ChartController index={c.i} onClick={selectChart} setPanel={setPanel} opts={c.options}>
+              <ChartController index={c.i} onClick={selectChart} setPanel={setPanel} opts={c.options} deleteChart={delChart}>
                 {selected === c.i ? <div /> : null }
               </ChartController>
             </div>

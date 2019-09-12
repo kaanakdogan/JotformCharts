@@ -41,7 +41,7 @@ export default function PieChart(props) {
 
   return (
     <div onClick={handleClick} style={{ position: 'relative', height: '100%', width: '100%' }}>
-      <canvas style={{ padding: '15px' }} ref={canvasRef} />
+      <canvas style={{ padding: '10px' }} ref={canvasRef} />
     </div>
   );
 }

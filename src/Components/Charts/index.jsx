@@ -3,13 +3,14 @@ import styled, { keyframes } from 'styled-components';
 import BarChart from './BarChart';
 import { SubmissionsContext } from '../../Contexts/SubmissionsContext';
 import Logo from '../../opt.svg';
+import del from '../../delete.svg';
 import mapQuestionAnswers, { mapSubmissionsByDate, getAvarageByDate, getHighestByDate } from './Utils';
 import { FormDataContext } from '../../Contexts/FormsContext';
 import PieChart from './PieChart';
 import LineChart from './LineChart';
 
 export default function ChartController({
-  children, onClick, index, setPanel, opts,
+  children, onClick, index, setPanel, opts, deleteChart,
 }) {
   const [submissions] = React.useContext(SubmissionsContext);
   const [formData] = React.useContext(FormDataContext);
@@ -47,12 +48,12 @@ export default function ChartController({
     if (opts.type === 'bar') {
       return (
         <>
-          {children && children.length !== 0 ? <Toolbox setPanel={setPanel} /> : null}
+          {children && children.length !== 0 ? <Toolbox setPanel={setPanel} deleteChart={deleteChart} /> : null}
           <BarChart
             onClick={handleClick}
             data={data}
             title={opts.dataType == 2 ? ' Submission Count Per Day' : Object.values(formData.questions).find((q) => q.qid === opts.qid).text}
-            color="#70CAD1"
+            color={opts.colors[0]}
           />
         </>
       );
@@ -61,12 +62,12 @@ export default function ChartController({
     if (opts.type === 'pie') {
       return (
         <>
-          {children && children.length !== 0 ? <Toolbox setPanel={setPanel} /> : null}
+          {children && children.length !== 0 ? <Toolbox setPanel={setPanel} deleteChart={deleteChart} /> : null}
           <PieChart
             onClick={handleClick}
             data={data}
             title={opts.dataType == 2 ? ' Submission Count Per Day' : Object.values(formData.questions).find((q) => q.qid === opts.qid).text}
-            color={['#a8e0ff', '#8ee3f5', '#70cad1', '#3e517a', '#b08ea2', '#BBB6DF']}
+            color={opts.colors}
           />
         </>
       );
@@ -76,12 +77,12 @@ export default function ChartController({
   if (opts.type === 'line') {
     return (
       <>
-        {children && children.length !== 0 ? <Toolbox setPanel={setPanel} /> : null}
+        {children && children.length !== 0 ? <Toolbox setPanel={setPanel} deleteChart={deleteChart} /> : null}
         <LineChart
           onClick={handleClick}
           data={data}
           title={opts.dataType == 2 ? ' Submission Count Per Day' : Object.values(formData.questions).find((q) => q.qid === opts.qid).text}
-          color="#3E517A"
+          color={opts.colors[0]}
         />
       </>
     );
@@ -91,15 +92,22 @@ export default function ChartController({
   return null;
 }
 
-function Toolbox({ setPanel }) {
-  const handleClick = () => {
+function Toolbox({ setPanel, deleteChart }) {
+  const handleOpenPanel = () => {
     setPanel();
+  };
+
+  const handleDeleteChart = () => {
+    deleteChart();
   };
 
   return (
     <Options>
-      <Wrapper onClick={handleClick}>
+      <Wrapper onClick={handleOpenPanel}>
         <Img src={Logo} />
+      </Wrapper>
+      <Wrapper onClick={handleDeleteChart}>
+        <Img src={del} />
       </Wrapper>
     </Options>
   );
@@ -111,6 +119,7 @@ const Img = styled.img`
 
 const Wrapper = styled.div`
 padding 5px;
+text-align: center;
 `;
 
 const Open = keyframes`

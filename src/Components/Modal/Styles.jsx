@@ -42,7 +42,7 @@ export const ModalContainer = styled.div`
   border-radius: ${(props) => props.theme.modalContainer.borderRad}
   height: ${(props) => props.theme.modalContainer.height}
   width: ${(props) => props.theme.modalContainer.width}
-  z-index: 11;
+  z-index: 99;
   padding: ${(props) => props.theme.modalContainer.padding}
   text-align: ${(props) => props.theme.modalContainer.textAlign}
   margin: auto;
