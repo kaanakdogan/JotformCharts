@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/JotformCharts/precache-manifest.9dbfd8eb73322d339f8de0200bad6442.js"
+  "/JotformCharts/precache-manifest.cf71df4943f9f77d3a1a9c82ac54085f.js"
 );
 
 self.addEventListener('message', (event) => {
