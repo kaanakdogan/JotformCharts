@@ -2,10 +2,19 @@ import React from 'react';
 import Layout from '../ResponsiveLayout';
 import * as Styles from './styles';
 import RightPanel from './RightPanel';
+import { FormDataContext } from '../../Contexts/FormsContext';
+
+function getDefaultQuestion(questions) {
+  return questions.filter((q) => q.type === 'control_datetime'
+      || q.type === 'control_time' || q.type === 'control_dropdown'
+      || q.type === 'control_radio' || q.type === 'control_checkbox'
+      || q.type === 'control_rating' || q.type === 'control_number')[0];
+}
 
 export default function ReportEditor({ report, onReportEdit }) {
   const [layouts, setLayouts] = React.useState(report.charts.map((l) => l.layout));
   const [charts, setCharts] = React.useState(report.charts);
+  const [questions] = React.useContext(FormDataContext);
   const [panel, setPanel] = React.useState(false);
   const [selected, setSelected] = React.useState();
 
@@ -39,7 +48,7 @@ export default function ReportEditor({ report, onReportEdit }) {
     setCharts((old) => [...old, {
       i: key,
       options: {
-        qid: '3',
+        qid: getDefaultQuestion(questions.questions).qid,
         type: 'bar',
         colors: ['#a8e0ff', '#8ee3f5', '#70cad1', '#3e517a', '#b08ea2', '#BBB6DF'],
       },
@@ -48,7 +57,7 @@ export default function ReportEditor({ report, onReportEdit }) {
     setLayouts((old) => [...old, {
       i: String(key),
       x: 0,
-      y: 0,
+      y: Infinity,
       w: 4,
       h: 4,
       minW: 4,
@@ -153,17 +162,21 @@ export default function ReportEditor({ report, onReportEdit }) {
             />
           </div>
         </Styles.MainItem>
+
         <Styles.RightItem isVisible={panel}>
-          {(
-            <RightPanel
-              chart={charts.find((c) => c.i == selected)}
-              setSelected={setSelectedQuestion}
-              setChartType={setChartType}
-              setDataType={setDataType}
-              setColors={setColors}
-            />
-          )}
+          <RightPanel
+            chart={charts.find((c) => {
+              console.log(c.i);
+              console.log(selected);
+              return c.i == selected;
+            })}
+            setSelected={setSelectedQuestion}
+            setChartType={setChartType}
+            setDataType={setDataType}
+            setColors={setColors}
+          />
         </Styles.RightItem>
+
       </Styles.FlexContainer>
     </div>
   );

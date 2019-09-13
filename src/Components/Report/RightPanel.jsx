@@ -11,7 +11,6 @@ export default function RightPanel({
   const [questions, setQuestions] = React.useState([]);
   const [data] = React.useContext(FormDataContext);
 
-
   React.useEffect(() => {
     if (chart) {
       if (chart.options.dataType == 3 || chart.options.dataType == 4) {
@@ -113,6 +112,7 @@ export default function RightPanel({
       if (ret) {
         return ret.text;
       }
+
       setSelected(questions[0].qid);
       return questions[0].text;
     }

@@ -6,19 +6,44 @@ import { ModalContext } from '../../Contexts/ModalContext';
 function Tab({
   label, onClick, active, id, form,
 }) {
+  const [dropview, setDropview] = useState(false);
+  const eventRef = React.useRef(null);
+
   const handleClick = (e) => {
     if (id === '-1') e.preventDefault();
     onClick(id);
   };
 
+  const handleDropview = () => {
+    setDropview(true);
+  };
+
+  const handleClickOutside = () => {
+    setDropview(false);
+  };
+
+  React.useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => { document.removeEventListener('mousedown', handleClickOutside); };
+  }, []);
+
   if (active == id) {
     return (
-      <Styles.tabItemActive href={`#/${form}/${id}`} onClick={handleClick}>{label}</Styles.tabItemActive>
+      <Styles.tabItemActive href={`#/${form}/${id}`} onClick={handleClick}>
+        <a href={`#/${form}/${id}`} onClick={handleClick}>
+          {label}
+        </a>
+        <span onClick={handleDropview}>
+          {'  X'}
+          {dropview ? <Dropview /> : null}
+        </span>
+      </Styles.tabItemActive>
     );
   }
 
   return (
-    <Styles.tabItem href={`#/${form}/${id}`} onClick={handleClick}>{label}</Styles.tabItem>
+    <Styles.tabItem><a href={`#/${form}/${id}`} onClick={handleClick}>{label}</a></Styles.tabItem>
   );
 }
 
@@ -58,5 +83,21 @@ export default function Tabs({ children, active }) {
       </Styles.tabList>
 
     </div>
+  );
+}
+
+function Dropview() {
+  return (
+    <Styles.DropviewWrapper>
+      <Styles.DropviewContent>
+        <div>Rename</div>
+        <div>Delete</div>
+        <div>Delete</div>
+        <div>Delete</div>
+        <div>Delete</div>
+        <div>Delete</div>
+
+      </Styles.DropviewContent>
+    </Styles.DropviewWrapper>
   );
 }

@@ -2,6 +2,7 @@
   "name": "reports-editor",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://kaanakdogan.github.ionp",
   "dependencies": {
     "chart.js": "^2.8.0",
     "history": "^4.9.0",

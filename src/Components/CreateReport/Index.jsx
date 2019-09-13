@@ -12,6 +12,11 @@ export default function CreateReport() {
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
+
+    if (!txt || txt.length === 0 || /^\s*$/.test(txt)) {
+      return;
+    }
+
     AddReport(formData.id, {
       name: txt,
       charts: [],

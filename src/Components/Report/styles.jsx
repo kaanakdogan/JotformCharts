@@ -17,9 +17,9 @@ export const MainItem = styled.div`
 export const RightItem = styled.div`
   flex: 1 1;
   max-width: ${(props) => (props.isVisible ? '360px' : '0px')};
+  display:${(props) => (props.isVisible ? 'block' : 'none')}
   order: 2;
   color: #fff;
   background-color: #1c2843;
   box-shadow: -5px 0 9px 0 rgba(0,0,0,.2);
-  z-index: 2;
 `;

@@ -120,6 +120,7 @@ const Img = styled.img`
 const Wrapper = styled.div`
 padding 5px;
 text-align: center;
+cursor: pointer;
 `;
 
 const Open = keyframes`
