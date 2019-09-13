@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "79dd2a38f1ebe044610765edcd9df5d9",
+    "revision": "fca3a9304a7a3c6bbc11fc1d36267833",
     "url": "/JotformCharts/index.html"
   },
   {
@@ -8,8 +8,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/JotformCharts/static/js/2.d5414a27.chunk.js"
   },
   {
-    "revision": "e7157101db621d207578",
-    "url": "/JotformCharts/static/js/main.c4c3ed85.chunk.js"
+    "revision": "3d8d9ccb51354a99f1b4",
+    "url": "/JotformCharts/static/js/main.6fae8529.chunk.js"
   },
   {
     "revision": "dd01527e72825e592e9d",
