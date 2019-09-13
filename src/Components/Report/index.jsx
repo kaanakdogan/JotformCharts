@@ -11,7 +11,7 @@ import { SubmissionsContext } from '../../Contexts/SubmissionsContext';
 import ReportEditor from './ReportEditor';
 
 async function GetSubmissions(formId) {
-  const submissions = await promisify(global.JF.getFormSubmissions)(formId);
+  const submissions = await promisify(global.JF.getFormSubmissions)(formId, { limit: 10000 });
   return submissions;
 }
 
