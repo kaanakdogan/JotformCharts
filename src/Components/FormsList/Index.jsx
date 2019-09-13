@@ -10,6 +10,7 @@ export default function List() {
   const [, setModal] = useContext(ModalContext);
 
   const handleClick = () => {
+    console.log(process.env.PUBLIC_URL);
     setModal({ isOpen: false, modalName: 'formSelect' });
   };
 
