@@ -33,6 +33,7 @@ function Login({ location }) {
       .then(() => {
         setAuth(true);
         const formProm = promisify(global.JF.getForms);
+        console.log(location);
         formProm({ limit: 200 })
           .then((res) => {
             setForms(res);
