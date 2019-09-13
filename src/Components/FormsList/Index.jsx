@@ -1,5 +1,6 @@
 /* eslint-disable max-len */
 import React, { useContext } from 'react';
+import { HashRouter as Route, Link } from 'react-router-dom';
 import PropType from 'prop-types';
 import * as Styles from './Styles';
 import { ModalContext } from '../../Contexts/ModalContext';
@@ -24,7 +25,7 @@ function Card({
   id, onClick, name, desc,
 }) {
   return (
-    <Styles.Item href={`${process.env.PUBLIC_URL}#/${id}`} onClick={onClick}>
+    <Styles.Item to={`${id}`} onClick={onClick}>
       <Styles.ItemContent>
         <Styles.ItemTitle>{name}</Styles.ItemTitle>
         <Styles.ItemDesc>{desc}</Styles.ItemDesc>
