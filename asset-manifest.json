@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.js": "/JotformCharts/static/js/main.8168ed21.chunk.js",
+    "main.js.map": "/JotformCharts/static/js/main.8168ed21.chunk.js.map",
+    "runtime~main.js": "/JotformCharts/static/js/runtime~main.585dac56.js",
+    "runtime~main.js.map": "/JotformCharts/static/js/runtime~main.585dac56.js.map",
+    "static/js/2.d5414a27.chunk.js": "/JotformCharts/static/js/2.d5414a27.chunk.js",
+    "static/js/2.d5414a27.chunk.js.map": "/JotformCharts/static/js/2.d5414a27.chunk.js.map",
+    "index.html": "/JotformCharts/index.html",
+    "precache-manifest.b306bd9c89a95ac7a678510e8a517135.js": "/JotformCharts/precache-manifest.b306bd9c89a95ac7a678510e8a517135.js",
+    "service-worker.js": "/JotformCharts/service-worker.js",
+    "static/media/delete.svg": "/JotformCharts/static/media/delete.85846383.svg",
+    "static/media/logo.svg": "/JotformCharts/static/media/logo.c8cf4890.svg",
+    "static/media/opt.svg": "/JotformCharts/static/media/opt.4ec93397.svg"
+  }
+}
