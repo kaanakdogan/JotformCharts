@@ -1,5 +1,6 @@
 import React, { useEffect, useContext } from 'react';
 import PropType from 'prop-types';
+import { HashRouter as Router, withRouter } from 'react-router-dom';
 import promisify from '../Utils';
 import History from '../History';
 import { FormsContext } from './FormsContext';
@@ -10,15 +11,18 @@ export const AuthContext = React.createContext(false);
 
 export function AuthProvider({ children }) {
   const [isAuth, setAuth] = React.useState(false);
+  const LoginWithRouter = withRouter(Login);
 
   return (
     <AuthContext.Provider value={[isAuth, setAuth]}>
-      {isAuth ? children : <Login />}
+      <Router history={History}>
+        {isAuth ? children : <LoginWithRouter />}
+      </Router>
     </AuthContext.Provider>
   );
 }
 
-function Login() {
+function Login({ location }) {
   const [isAuth, setAuth] = useContext(AuthContext);
   const [, setForms] = useContext(FormsContext);
 
@@ -32,7 +36,15 @@ function Login() {
         formProm({ limit: 200 })
           .then((res) => {
             setForms(res);
-            History.push(`/${res[0].id}`);
+            if (location.pathname) {
+              if (res.filter((r) => `/${r.id}` === location.pathname)) {
+                History.push(location.pathname);
+              } else {
+                History.push(`/${res[0].id}`);
+              }
+            } else {
+              History.push(`/${res[0].id}`);
+            }
           });
       })
       .catch(() => {
