@@ -23,7 +23,7 @@ function Card({
   id, onClick, name, desc,
 }) {
   return (
-    <Styles.Item href={`/#/${id}`} onClick={onClick}>
+    <Styles.Item href={`${process.env.PUBLIC_URL}#/${id}`} onClick={onClick}>
       <Styles.ItemContent>
         <Styles.ItemTitle>{name}</Styles.ItemTitle>
         <Styles.ItemDesc>{desc}</Styles.ItemDesc>

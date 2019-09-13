@@ -102,7 +102,7 @@ function ReportPicker({ reports, form, match }) {
       setModal({
         isOpen: true,
         modalName: 'errorModal',
-        redirectUrl: `#/${form}`,
+        redirectUrl: `${process.env.PUBLIC_URL}/${form}`,
       });
     } else {
       setModal({

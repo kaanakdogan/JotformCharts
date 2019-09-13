@@ -32,7 +32,7 @@ function Login() {
         formProm({ limit: 200 })
           .then((res) => {
             setForms(res);
-            History.push(`./${res[0].id}`);
+            History.push(`/${res[0].id}`);
           });
       })
       .catch(() => {
