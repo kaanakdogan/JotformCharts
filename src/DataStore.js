@@ -30,14 +30,13 @@ export async function GetFormReports(formId) {
 
 export async function GetNextId(formId) {
   const formReports = await GetFormReports(formId);
-  if (formReports) {
+  if (formReports && formReports.length > 0) {
     let rep = formReports[0];
     for (let i = 0; i < formReports.length; i += 1) {
       if (rep.id < formReports[i].id) {
         rep = formReports[i];
       }
     }
-
     return rep.id;
   }
   return 0;
@@ -62,8 +61,8 @@ export async function AddReport(formId, report) {
 }
 
 export async function EditReport(formId, report) {
-  let formReports = await GetFormReports(formId);
   reports = await GetReports();
+  let formReports = await GetFormReports(formId);
   if (!formReports) {
     formReports = [];
   }
@@ -76,10 +75,17 @@ export async function EditReport(formId, report) {
   return localforage.setItem('Reports', newReps);
 }
 
-export async function RemoveReport(report) {
+export async function RemoveReport(formId, id) {
   await GetReports();
+  let formReports = await GetFormReports(formId);
+  if (!formReports) {
+    formReports = [];
+  }
 
-  const newReps = reports.filter((r) => r.id !== report.id);
+  formReports = formReports.filter((r) => r.id !== id);
+
+  const newReps = Object.values(reports).filter((r) => r.id !== formId.toString());
+  newReps.push({ id: formId, reports: formReports });
   return localforage.setItem('Reports', newReps);
 }
 

@@ -7,7 +7,7 @@ const Dropview = React.forwardRef((props, ref) => (
   <Styles.DropviewWrapper ref={ref}>
     <Styles.DropviewContent>
       <button onClick={props.startEdit}>Rename</button>
-      <div>Delete</div>
+      <button onClick={props.deleteReport}>Delete</button>
       <div>Delete</div>
       <div>Delete</div>
       <div>Delete</div>
@@ -19,7 +19,7 @@ const Dropview = React.forwardRef((props, ref) => (
 
 
 function Tab({
-  label, onClick, active, id, form, editName,
+  label, onClick, active, id, form, editName, deleteReport,
 }) {
   const [dropview, setDropview] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -30,11 +30,12 @@ function Tab({
     if (labelRef.current) {
       labelRef.current.innerText = label;
     }
-  }, [label]);
+  }, [label, active]);
 
   React.useEffect(() => {
     if (isEditing) {
       labelRef.current.focus();
+      setDropview(false);
     }
   }, [isEditing]);
 
@@ -79,7 +80,6 @@ function Tab({
     document.addEventListener('mousedown', handleClickOutsideEdit);
   };
 
-
   React.useEffect(() => {
     document.addEventListener('mousedown', handleClickOutside);
 
@@ -98,7 +98,7 @@ function Tab({
         </span>
         <span onClick={handleDropview}>
           {'  X'}
-          {dropview ? <Dropview ref={eventRef} startEdit={startEditing} /> : null}
+          {dropview ? <Dropview ref={eventRef} startEdit={startEditing} close={setDropview} deleteReport={deleteReport} /> : null}
         </span>
       </Styles.tabItemActive>
     );
@@ -109,7 +109,9 @@ function Tab({
   );
 }
 
-export default function Tabs({ children, active, editName }) {
+export default function Tabs({
+  children, active, editName, deleteReport,
+}) {
   const [, setModal] = useContext(ModalContext);
   const [activeTab, setActiveTab] = useState(active);
 
@@ -128,6 +130,12 @@ export default function Tabs({ children, active, editName }) {
     editName(name, activeTab);
   };
 
+  const delReport = (e) => {
+    e.preventDefault();
+    console.log(activeTab);
+    deleteReport(activeTab);
+  };
+
   React.useEffect(() => { setActive(active); }, [active]);
 
 
@@ -142,6 +150,7 @@ export default function Tabs({ children, active, editName }) {
           id={child.props.id}
           form={child.props.form}
           editName={editReportName}
+          deleteReport={delReport}
         />
       ))}
       <Tab key="-1" id="-1" label="New Report" onClick={newReportClick} />

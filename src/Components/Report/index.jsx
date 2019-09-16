@@ -4,7 +4,7 @@ import { Route } from 'react-router-dom';
 import { FormDataContext } from '../../Contexts/FormsContext';
 import { ModalContext } from '../../Contexts/ModalContext';
 import promisify from '../../Utils';
-import { GetFormReports, EditReport } from '../../DataStore';
+import { GetFormReports, EditReport, RemoveReport } from '../../DataStore';
 import Header from '../Header';
 import Tabs from '../Tabs';
 import { SubmissionsContext } from '../../Contexts/SubmissionsContext';
@@ -67,6 +67,20 @@ export default function Reports({ match }) {
     console.log(reports);
   }, [reports]);
 
+  const editReport = (form, report) => {
+    EditReport(form, report).then((res) => {
+      console.log(res);
+      setReports(res.find((r) => r.id == form).reports);
+    });
+  };
+
+  const deleteReport = (form, repId) => {
+    RemoveReport(form, repId).then((res) => {
+      console.log(res);
+      setReports(res.find((r) => r.id == form).reports);
+    });
+  };
+
   return (
     <>
       <Header />
@@ -74,7 +88,7 @@ export default function Reports({ match }) {
         exact
         path={`${match.url}/:rep`}
         render={(props) => (
-          <ReportPicker reports={reports} form={match.params.id} match={props.match} />)}
+          <ReportPicker reports={reports} form={match.params.id} match={props.match} editReport={editReport} deleteReport={deleteReport} />)}
       />
       <Route
         exact
@@ -91,7 +105,9 @@ export default function Reports({ match }) {
   );
 }
 
-function ReportPicker({ reports, form, match }) {
+function ReportPicker({
+  reports, form, match, editReport, deleteReport,
+}) {
   const [rep, setRep] = React.useState([]);
   const [, setModal] = React.useContext(ModalContext);
 
@@ -117,10 +133,10 @@ function ReportPicker({ reports, form, match }) {
   }, [rep]);
 
   const onReportEdit = (report) => {
-    EditReport(form, report);
+    editReport(form, report);
   };
 
-  const editReportName = (newName, id) => {
+  const onEditReportName = (newName, id) => {
     const reportToReturn = JSON.parse(JSON.stringify(reports.find((r) => r.id === id)));
 
     reportToReturn.name = newName;
@@ -128,13 +144,18 @@ function ReportPicker({ reports, form, match }) {
     onReportEdit(reportToReturn);
   };
 
+  const onDeleteReport = (id) => {
+    deleteReport(form, id);
+  };
+
   return (
     <>
-      <Tabs active={match.params.rep} editName={editReportName}>
+      <Tabs active={match.params.rep} editName={onEditReportName} deleteReport={onDeleteReport}>
         {reports.sort((r1, r2) => r1.id - r2.id).map((r) => (
           <div label={r.name} key={r.id} id={r.id} form={form} />
         ))}
       </Tabs>
+      {console.log(reports)}
       {
         rep && rep.length !== 0
           ? (
