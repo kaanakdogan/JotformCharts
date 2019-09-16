@@ -63,9 +63,12 @@ export default function Reports({ match }) {
     });
   }, [modal, match.params]);
 
+  React.useEffect(() => {
+    console.log(reports);
+  }, [reports]);
 
   return (
-    <div>
+    <>
       <Header />
       <Route
         exact
@@ -84,7 +87,7 @@ export default function Reports({ match }) {
           </Tabs>
         )}
       />
-    </div>
+    </>
   );
 }
 
@@ -117,9 +120,17 @@ function ReportPicker({ reports, form, match }) {
     EditReport(form, report);
   };
 
+  const editReportName = (newName, id) => {
+    const reportToReturn = JSON.parse(JSON.stringify(reports.find((r) => r.id === id)));
+
+    reportToReturn.name = newName;
+
+    onReportEdit(reportToReturn);
+  };
+
   return (
-    <div>
-      <Tabs active={match.params.rep}>
+    <>
+      <Tabs active={match.params.rep} editName={editReportName}>
         {reports.sort((r1, r2) => r1.id - r2.id).map((r) => (
           <div label={r.name} key={r.id} id={r.id} form={form} />
         ))}
@@ -134,12 +145,6 @@ function ReportPicker({ reports, form, match }) {
           )
           : <div />
       }
-    </div>
+    </>
   );
 }
-
-// const charts = [{
-//   layout: {},
-//   options: {},
-//   key: {},
-// }];

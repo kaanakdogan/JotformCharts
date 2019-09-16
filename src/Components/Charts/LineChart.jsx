@@ -1,5 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import Chart from 'chart.js';
+import { ChartDiv } from './styles';
 
 export default function LineChart(props) {
   const canvasRef = useRef(null);
@@ -59,8 +60,8 @@ export default function LineChart(props) {
   };
 
   return (
-    <div onClick={handleClick} style={{ position: 'relative', height: '100%', width: '100%' }}>
+    <ChartDiv onClick={handleClick}>
       <canvas ref={canvasRef} />
-    </div>
+    </ChartDiv>
   );
 }

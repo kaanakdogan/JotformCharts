@@ -23,3 +23,10 @@ export const RightItem = styled.div`
   background-color: #1c2843;
   box-shadow: -5px 0 9px 0 rgba(0,0,0,.2);
 `;
+
+export const DocMain = styled.div`
+  position: relative;
+  width: 100%;
+  height: calc(100vh - 171px);
+  transition: height .3s;
+`;

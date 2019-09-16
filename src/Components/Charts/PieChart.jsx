@@ -1,5 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import Chart from 'chart.js';
+import { ChartDiv } from './styles';
 
 export default function PieChart(props) {
   const canvasRef = useRef(null);
@@ -40,8 +41,8 @@ export default function PieChart(props) {
   };
 
   return (
-    <div onClick={handleClick} style={{ position: 'relative', height: '100%', width: '100%' }}>
+    <ChartDiv onClick={handleClick}>
       <canvas style={{ padding: '10px' }} ref={canvasRef} />
-    </div>
+    </ChartDiv>
   );
 }

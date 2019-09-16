@@ -2,6 +2,7 @@ import React from 'react';
 import RGL, { WidthProvider } from 'react-grid-layout';
 import ChartController from '../Charts';
 import { FormDataContext } from '../../Contexts/FormsContext';
+import * as Styles from './styles';
 
 
 const ReactGridLayout = WidthProvider(RGL);
@@ -29,13 +30,15 @@ export default function Layout({
   }, [data]);
 
   return (
-    <div style={{ position: 'relative', overflow: 'auto' }}>
+    <Styles.DocArea>
 
-      <div style={{ width: '1200px', margin: '0 auto' }}>
+      <Styles.LayoutDiv style={{ width: '1200px', margin: '0 auto' }}>
         <ReactGridLayout
           className="layout"
 
           rowHeight={60}
+          width={1200}
+          height={870}
           layout={layout}
           onLayoutChange={(lo) => onLayoutChange(lo)}
         >
@@ -47,7 +50,7 @@ export default function Layout({
             </div>
           ))}
         </ReactGridLayout>
-      </div>
-    </div>
+      </Styles.LayoutDiv>
+    </Styles.DocArea>
   );
 }

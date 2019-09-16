@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from 'react';
-import styled, { keyframes } from 'styled-components';
 import BarChart from './BarChart';
+import * as Styles from './styles';
 import { SubmissionsContext } from '../../Contexts/SubmissionsContext';
 import Logo from '../../opt.svg';
 import del from '../../delete.svg';
@@ -17,7 +17,12 @@ export default function ChartController({
   const [data, setData] = React.useState([]);
 
   useEffect(() => {
+    if (!submissions) {
+      return;
+    }
+
     let d;
+    console.log(submissions);
     switch (opts.dataType) {
       case '1':
         d = submissions.reduce(mapQuestionAnswers(opts.qid), []);
@@ -30,6 +35,7 @@ export default function ChartController({
         break;
       case '4':
         d = getHighestByDate(opts.qid, submissions);
+        console.log();
         break;
       default:
         d = submissions.reduce(mapQuestionAnswers(opts.qid), []);
@@ -38,7 +44,7 @@ export default function ChartController({
 
     setData(d);
     console.log(d);
-  }, [opts.qid, opts.dataType, opts.type]);
+  }, [opts.qid, opts.dataType, opts.type, submissions]);
 
   const handleClick = (e) => {
     onClick(index);
@@ -52,7 +58,7 @@ export default function ChartController({
           <BarChart
             onClick={handleClick}
             data={data}
-            title={opts.dataType == 2 ? ' Submission Count Per Day' : Object.values(formData.questions).find((q) => q.qid === opts.qid).text}
+            title={opts.dataType == 2 ? ' Submission Count / Date' : Object.values(formData.questions).find((q) => q.qid === opts.qid).text}
             color={opts.colors[0]}
           />
         </>
@@ -66,7 +72,7 @@ export default function ChartController({
           <PieChart
             onClick={handleClick}
             data={data}
-            title={opts.dataType == 2 ? ' Submission Count Per Day' : Object.values(formData.questions).find((q) => q.qid === opts.qid).text}
+            title={opts.dataType == 2 ? ' Submission Count / Date' : Object.values(formData.questions).find((q) => q.qid === opts.qid).text}
             color={opts.colors}
           />
         </>
@@ -81,7 +87,7 @@ export default function ChartController({
         <LineChart
           onClick={handleClick}
           data={data}
-          title={opts.dataType == 2 ? ' Submission Count Per Day' : Object.values(formData.questions).find((q) => q.qid === opts.qid).text}
+          title={opts.dataType == 2 ? ' Submission Count / Date' : Object.values(formData.questions).find((q) => q.qid === opts.qid).text}
           color={opts.colors[0]}
         />
       </>
@@ -102,52 +108,13 @@ function Toolbox({ setPanel, deleteChart }) {
   };
 
   return (
-    <Options>
-      <Wrapper onClick={handleOpenPanel}>
-        <Img src={Logo} />
-      </Wrapper>
-      <Wrapper onClick={handleDeleteChart}>
-        <Img src={del} />
-      </Wrapper>
-    </Options>
+    <Styles.Options>
+      <Styles.Wrapper onClick={handleOpenPanel}>
+        <Styles.Img src={Logo} />
+      </Styles.Wrapper>
+      <Styles.Wrapper onClick={handleDeleteChart}>
+        <Styles.Img src={del} />
+      </Styles.Wrapper>
+    </Styles.Options>
   );
 }
-
-const Img = styled.img`
-  height: 15px;
-`;
-
-const Wrapper = styled.div`
-padding 5px;
-text-align: center;
-cursor: pointer;
-`;
-
-const Open = keyframes`
-0% {
-  right: 0;
-  opacity: 0;
-}
-
-50% {
-  opacity: 0;
-}
-100% {
-  right: -35px;
-  opacity: 1;
-}
-`;
-
-const Options = styled.div`
-  position: absolute;
-  top: 0px;
-  right: 0px;
-  opacity: 0;
-  height: auto;
-  background-color: rgb(76, 127, 244);
-  cursor: default;
-  z-index: 1;
-  padding: 5px 0px;
-  border-radius: 4px;
-  animation: ${Open} 0.2s ease 0s 1 normal forwards running;
-`;

@@ -1,6 +1,5 @@
 /* eslint-disable max-len */
 import React, { useContext } from 'react';
-import { HashRouter as Route, Link } from 'react-router-dom';
 import PropType from 'prop-types';
 import * as Styles from './Styles';
 import { ModalContext } from '../../Contexts/ModalContext';
@@ -11,7 +10,6 @@ export default function List() {
   const [, setModal] = useContext(ModalContext);
 
   const handleClick = () => {
-    console.log(process.env.PUBLIC_URL);
     setModal({ isOpen: false, modalName: 'formSelect' });
   };
 

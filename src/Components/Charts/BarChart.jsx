@@ -1,5 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import Chart from 'chart.js';
+import { ChartDiv } from './styles';
 
 const opts = {
   responsive: true,
@@ -51,8 +52,8 @@ export default function BarChart(props) {
   };
 
   return (
-    <div onClick={handleClick} style={{ position: 'relative', height: '100%', width: '100%' }}>
+    <ChartDiv onClick={handleClick}>
       <canvas ref={canvasRef} />
-    </div>
+    </ChartDiv>
   );
 }

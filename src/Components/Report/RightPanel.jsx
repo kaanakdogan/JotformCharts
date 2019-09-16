@@ -78,16 +78,16 @@ export default function RightPanel({
 
   const dataOptions = [{
     qid: '1',
-    text: 'All answers for a Field',
+    text: 'Submission Count / Question',
   }, {
     qid: '2',
-    text: 'Submission Count Per Day',
+    text: 'Submission Count / Date',
   }, {
     qid: '3',
-    text: 'Avarage of answers for a field per day',
+    text: 'Average of Answers / Date',
   }, {
     qid: '4',
-    text: 'Highest of answers for a field per day',
+    text: 'Highest of Answers / Date',
   }];
 
   const def = () => {
@@ -103,7 +103,7 @@ export default function RightPanel({
       return dataOptions.find((d) => d.qid === chart.options.dataType).text;
     }
 
-    return 'All answers for a Field';
+    return 'Submission Count / Question';
   };
 
   const def3 = () => {

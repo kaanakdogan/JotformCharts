@@ -1,6 +1,5 @@
 /* eslint-disable arrow-body-style */
 /* eslint-disable react/prop-types */
-/* eslint-disable react/jsx-indent */
 /* eslint-disable react/destructuring-assignment */
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -18,18 +17,10 @@ class Modal extends React.Component {
     this.el = document.createElement('div');
   }
 
-  componentDidMount() {
-    modalRoot.appendChild(this.el);
-  }
-
-  componentWillUnmount() {
-    modalRoot.removeChild(this.el);
-  }
-
   render() {
     return (
       this.context[0].isOpen ? ReactDOM.createPortal(
-        this.props.children, this.el,
+        this.props.children, modalRoot,
       ) : null
     );
   }
@@ -51,24 +42,22 @@ export function ModalView(props) {
   };
 
   return (
-    <div>
-      <Modal>
-          <Styles.Root>
-            <Styles.ModalWrapper>
-              <Styles.ModalContainer>
-                <Styles.ModalCont>
-                  <Styles.Close onClick={handleClick} />
-                <Styles.Header>
-                  {props.header}
-                </Styles.Header>
-                <Styles.ModalContent>
-                  {props.children}
-                </Styles.ModalContent>
-                </Styles.ModalCont>
-              </Styles.ModalContainer>
-            </Styles.ModalWrapper>
-          </Styles.Root>
-      </Modal>
-    </div>
+    <Modal>
+      <Styles.Root>
+        <Styles.ModalWrapper>
+          <Styles.ModalContainer>
+            <Styles.ModalCont>
+              <Styles.Close onClick={handleClick} />
+              <Styles.Header>
+                {props.header}
+              </Styles.Header>
+              <Styles.ModalContent>
+                {props.children}
+              </Styles.ModalContent>
+            </Styles.ModalCont>
+          </Styles.ModalContainer>
+        </Styles.ModalWrapper>
+      </Styles.Root>
+    </Modal>
   );
 }

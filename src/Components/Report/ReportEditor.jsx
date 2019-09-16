@@ -147,11 +147,11 @@ export default function ReportEditor({ report, onReportEdit }) {
   };
 
   return (
-    <div>
+    <>
       <button type="button" onClick={handleAdd}>New Chart</button>
       <Styles.FlexContainer>
         <Styles.MainItem>
-          <div style={{ width: '100%' }}>
+          <Styles.DocMain>
             <Layout
               charts={charts}
               layout={layouts}
@@ -160,7 +160,7 @@ export default function ReportEditor({ report, onReportEdit }) {
               deleteChart={deleteChart}
               chartSelection={[selected, setSelected]}
             />
-          </div>
+          </Styles.DocMain>
         </Styles.MainItem>
 
         <Styles.RightItem isVisible={panel}>
@@ -178,6 +178,6 @@ export default function ReportEditor({ report, onReportEdit }) {
         </Styles.RightItem>
 
       </Styles.FlexContainer>
-    </div>
+    </>
   );
 }

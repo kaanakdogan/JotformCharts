@@ -6,10 +6,10 @@ export const Nav = styled.div`
 `;
 
 export const NavHeader = styled.div`
-  max-width: 1010px;
   padding: 26px 20px;
   width: 100%;
   display: flex;
+  justify-content: space-between;
   align-items: center;
   margin: 0 auto;
 `;
