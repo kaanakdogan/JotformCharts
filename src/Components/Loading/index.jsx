@@ -43,12 +43,20 @@ const Idle = styled.div`
   }
 `;
 
+const Wrapper = styled.div`
+width: 100%;
+height: 100%;
+text-align: center;
+`;
+
 export default function Loading() {
   return (
-    <Idle>
-      <div />
-      <div />
-      <div />
-    </Idle>
+    <Wrapper>
+      <Idle>
+        <div />
+        <div />
+        <div />
+      </Idle>
+    </Wrapper>
   );
 }

@@ -28,15 +28,3 @@ export default function Header() {
     </Nav>
   );
 }
-
-export function Help() {
-  return (
-    <div>Help</div>
-  );
-}
-
-export function Home() {
-  return (
-    <div>Home</div>
-  );
-}

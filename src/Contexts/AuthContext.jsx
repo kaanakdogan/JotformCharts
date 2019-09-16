@@ -6,21 +6,7 @@ import History from '../History';
 import { FormsContext } from './FormsContext';
 import { CleanDatabase } from '../DataStore';
 
-
 export const AuthContext = React.createContext(false);
-
-export function AuthProvider({ children }) {
-  const [isAuth, setAuth] = React.useState(false);
-  const LoginWithRouter = withRouter(Login);
-
-  return (
-    <AuthContext.Provider value={[isAuth, setAuth]}>
-      <Router history={History}>
-        {isAuth ? children : <LoginWithRouter />}
-      </Router>
-    </AuthContext.Provider>
-  );
-}
 
 function Login({ location }) {
   const [isAuth, setAuth] = useContext(AuthContext);
@@ -36,7 +22,6 @@ function Login({ location }) {
         formProm({ limit: 200 })
           .then((res) => {
             setForms(res);
-            console.log(location.pathname);
             if (location.pathname != '/') {
               const check = location.pathname.split('/')[1];
               if (res.find((r) => `${r.id}` === check)) {
@@ -59,6 +44,19 @@ function Login({ location }) {
   }
 
   return <div />;
+}
+
+export function AuthProvider({ children }) {
+  const [isAuth, setAuth] = React.useState(false);
+  const LoginWithRouter = withRouter(Login);
+
+  return (
+    <AuthContext.Provider value={[isAuth, setAuth]}>
+      <Router history={History}>
+        {isAuth ? children : <LoginWithRouter />}
+      </Router>
+    </AuthContext.Provider>
+  );
 }
 
 AuthProvider.propTypes = {

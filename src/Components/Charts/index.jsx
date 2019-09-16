@@ -21,8 +21,12 @@ export default function ChartController({
       return;
     }
 
+    if (opts.qid === -1) {
+      setData(submissions.reduce(mapSubmissionsByDate(), []));
+      return;
+    }
+
     let d;
-    console.log(submissions);
     switch (opts.dataType) {
       case '1':
         d = submissions.reduce(mapQuestionAnswers(opts.qid), []);
@@ -35,7 +39,6 @@ export default function ChartController({
         break;
       case '4':
         d = getHighestByDate(opts.qid, submissions);
-        console.log();
         break;
       default:
         d = submissions.reduce(mapQuestionAnswers(opts.qid), []);
@@ -43,11 +46,19 @@ export default function ChartController({
     }
 
     setData(d);
-    console.log(d);
   }, [opts.qid, opts.dataType, opts.type, submissions]);
 
   const handleClick = (e) => {
     onClick(index);
+  };
+
+  const title = () => {
+    console.log(opts.dataType);
+    if (opts.dataType == 2) {
+      return ' Submission Count / Date';
+    }
+
+    return Object.values(formData.questions).find((q) => q.qid === opts.qid).text;
   };
 
   if (opts) {
@@ -58,7 +69,7 @@ export default function ChartController({
           <BarChart
             onClick={handleClick}
             data={data}
-            title={opts.dataType == 2 ? ' Submission Count / Date' : Object.values(formData.questions).find((q) => q.qid === opts.qid).text}
+            title={title()}
             color={opts.colors[0]}
           />
         </>
@@ -100,7 +111,7 @@ export default function ChartController({
 
 function Toolbox({ setPanel, deleteChart }) {
   const handleOpenPanel = () => {
-    setPanel();
+    setPanel(true);
   };
 
   const handleDeleteChart = () => {

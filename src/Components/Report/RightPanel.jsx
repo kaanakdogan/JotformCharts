@@ -9,15 +9,47 @@ export default function RightPanel({
 }) {
   const [questions, setQuestions] = React.useState([]);
   const [data] = React.useContext(FormDataContext);
+  const [dataOptions, setDataOptions] = React.useState([{
+    qid: '1',
+    text: 'Submission Count / Question',
+  }, {
+    qid: '2',
+    text: 'Submission Count / Date',
+  }, {
+    qid: '3',
+    text: 'Average of Answers / Date',
+  }, {
+    qid: '4',
+    text: 'Highest of Answers / Date',
+  }]);
 
   React.useEffect(() => {
     if (chart) {
-      console.log(chart);
+      if (chart.options.qid === -1) {
+        setDataOptions([{
+          qid: '2',
+          text: 'Submission Count / Date',
+        }]);
+      } else {
+        setDataOptions([{
+          qid: '1',
+          text: 'Submission Count / Question',
+        }, {
+          qid: '2',
+          text: 'Submission Count / Date',
+        }, {
+          qid: '3',
+          text: 'Average of Answers / Date',
+        }, {
+          qid: '4',
+          text: 'Highest of Answers / Date',
+        }]);
+      }
+
       if (chart.options.dataType == 3 || chart.options.dataType == 4) {
         const qs = data.questions.filter((q) => q.type === 'control_rating'
         || q.type === 'control_number');
 
-        console.log(qs);
         setQuestions(qs);
       } else if (chart.options.dataType == 2) {
         setQuestions(null);
@@ -39,6 +71,17 @@ export default function RightPanel({
     }
   }, [chart]);
 
+  React.useEffect(() => {
+    if (chart && chart.options.dataType != 2) {
+      if (questions.length !== 0) {
+        if (questions.find((q) => q.qid == chart.options.qid)) {
+          return;
+        }
+        setSelected(questions[0].qid);
+      }
+    }
+  }, [questions]);
+
   const onQuestionSelect = (qid) => {
     setSelected(qid);
   };
@@ -54,7 +97,6 @@ export default function RightPanel({
       const qs = data.questions.filter((q) => q.type === 'control_rating'
       || q.type === 'control_number');
 
-      console.log(qs);
       setQuestions(qs);
     } else if (type == 2) {
       setQuestions(null);
@@ -69,20 +111,6 @@ export default function RightPanel({
   };
 
   const typeOptions = [{ qid: 'bar', text: 'Bar' }, { qid: 'pie', text: 'Pie' }, { qid: 'line', text: 'Line' }];
-
-  const dataOptions = [{
-    qid: '1',
-    text: 'Submission Count / Question',
-  }, {
-    qid: '2',
-    text: 'Submission Count / Date',
-  }, {
-    qid: '3',
-    text: 'Average of Answers / Date',
-  }, {
-    qid: '4',
-    text: 'Highest of Answers / Date',
-  }];
 
   const def = () => {
     if (chart && chart.options) {
@@ -107,7 +135,6 @@ export default function RightPanel({
         return ret.text;
       }
 
-      setSelected(questions[0].qid);
       return questions[0].text;
     }
     return questions.map((q) => q.text)[0];
@@ -126,13 +153,8 @@ export default function RightPanel({
       <p>Chart Options</p>
       <Dropdown def={def()} options={typeOptions} onSelect={onChartTypeSelect} />
       <Dropdown def={def2()} options={dataOptions} onSelect={onDataTypeSelect} />
-      {questions ? <Dropdown def={def3()} options={questions} onSelect={onQuestionSelect} /> : null}
+      {questions && questions.length !== 0 ? <Dropdown def={def3()} options={questions} onSelect={onQuestionSelect} /> : null}
       <ColorPicker isMultiple={chart && chart.options.type === 'pie'} colors={def4()} onColorsChange={setColors} />
     </div>
   );
 }
-
-// All answers for a Field,
-// Submission Count Per Day,
-// Avarage of answers for a field per day
-// Highest of answers for a field per day

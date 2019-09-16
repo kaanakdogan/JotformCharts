@@ -5,10 +5,16 @@ import RightPanel from './RightPanel';
 import { FormDataContext } from '../../Contexts/FormsContext';
 
 function getDefaultQuestion(questions) {
-  return questions.filter((q) => q.type === 'control_datetime'
+  const toRet = questions.find((q) => q.type === 'control_datetime'
       || q.type === 'control_time' || q.type === 'control_dropdown'
       || q.type === 'control_radio' || q.type === 'control_checkbox'
-      || q.type === 'control_rating' || q.type === 'control_number')[0];
+      || q.type === 'control_rating' || q.type === 'control_number');
+
+  if (toRet) {
+    return toRet.qid;
+  }
+
+  return -1;
 }
 
 export default function ReportEditor({ report, onReportEdit }) {
@@ -29,6 +35,9 @@ export default function ReportEditor({ report, onReportEdit }) {
   // Save layout and charts on editing either of those.
   React.useEffect(() => {
     if (layouts && charts) {
+      if (layouts.length !== charts.length) {
+        return;
+      }
       const reportToReturn = JSON.parse(JSON.stringify(report));
       reportToReturn.charts = [];
       for (let c = 0; c < layouts.length; c++) {
@@ -43,6 +52,10 @@ export default function ReportEditor({ report, onReportEdit }) {
     }
   }, [layouts, charts]);
 
+  React.useEffect(() => {
+    setPanel(false);
+  }, [report]);
+
   const onLayoutsChange = (layout) => {
     setLayouts(layout);
   };
@@ -53,7 +66,8 @@ export default function ReportEditor({ report, onReportEdit }) {
     setCharts((old) => [...old, {
       i: key,
       options: {
-        qid: getDefaultQuestion(questions.questions).qid,
+        qid: getDefaultQuestion(questions.questions),
+        dataType: getDefaultQuestion(questions.questions) === -1 ? '2' : '1',
         type: 'bar',
         colors: ['#a8e0ff', '#8ee3f5', '#70cad1', '#3e517a', '#b08ea2', '#BBB6DF'],
       },
@@ -76,19 +90,20 @@ export default function ReportEditor({ report, onReportEdit }) {
     add();
   };
 
-  const togglePanel = () => {
-    setPanel(!panel);
+  const togglePanel = (e) => {
+    if (e) {
+      setPanel(!panel);
+    } else {
+      setPanel(false);
+    }
   };
 
   const deleteChart = (key) => {
     const newCharts = charts.filter((c) => c.i !== key);
     const newLayouts = layouts.filter((l) => Number(l.i) !== key);
-    console.log(key);
-    console.log({ newCharts, charts });
-    console.log({ newLayouts, layouts });
 
-    setCharts(newCharts);
     setLayouts(newLayouts);
+    setCharts(newCharts);
   };
 
   const setSelectedQuestion = (qid) => {
@@ -171,12 +186,9 @@ export default function ReportEditor({ report, onReportEdit }) {
 
           {panel ? (
             <Styles.RightItem isVisible={panel}>
+              {console.log(charts.find((c) => c.i == selected))}
               <RightPanel
-                chart={charts.find((c) => {
-                  console.log(c.i);
-                  console.log(selected);
-                  return c.i == selected;
-                })}
+                chart={charts.find((c) => c.i == selected)}
                 setSelected={setSelectedQuestion}
                 setChartType={setChartType}
                 setDataType={setDataType}

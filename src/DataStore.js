@@ -1,6 +1,6 @@
 import localforage from 'localforage';
 
-let reports;
+let reports = [];
 
 export async function GetReports() {
   if (reports) {
@@ -16,7 +16,9 @@ export async function GetReports() {
 }
 
 export async function GetFormReports(formId) {
-  await GetReports();
+  reports = await GetReports();
+
+  console.log(reports);
 
   if (reports) {
     // eslint-disable-next-line eqeqeq
@@ -71,12 +73,13 @@ export async function EditReport(formId, report) {
   formReports.push(report);
 
   const newReps = Object.values(reports).filter((r) => r.id !== formId.toString());
+
   newReps.push({ id: formId, reports: formReports });
   return localforage.setItem('Reports', newReps);
 }
 
 export async function RemoveReport(formId, id) {
-  await GetReports();
+  reports = await GetReports();
   let formReports = await GetFormReports(formId);
   if (!formReports) {
     formReports = [];
@@ -92,16 +95,3 @@ export async function RemoveReport(formId, id) {
 export async function CleanDatabase() {
   return localforage.removeItem('Reports');
 }
-
-// Mockup data for Reports
-// [{
-//   formId: [{
-//     reportid:'123'
-//     charts: [{
-//       chardid:
-//       layout:
-//       options:
-//       questionIDs: [],
-//     }]
-//   }]
-// }]

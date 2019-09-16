@@ -23,7 +23,7 @@ function Card({
   id, onClick, name, desc,
 }) {
   return (
-    <Styles.Item to={`${id}`} onClick={onClick}>
+    <Styles.Item to={{ pathname: `/${id}`, hash: '#' }} onClick={onClick}>
       <Styles.ItemContent>
         <Styles.ItemTitle>{name}</Styles.ItemTitle>
         <Styles.ItemDesc>{desc}</Styles.ItemDesc>

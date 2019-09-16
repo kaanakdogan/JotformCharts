@@ -22,7 +22,7 @@ export default function Layout({
   const delChart = () => {
     deleteChart(selected);
     setSelected(null);
-    setPanel();
+    setPanel(false);
   };
 
   React.useEffect(() => console.log(charts), [charts]);
@@ -34,9 +34,10 @@ export default function Layout({
   if (!submissions || submissions.length === 0) {
     return (<Loading />);
   }
+
   return (
     <Styles.DocArea>
-      <Styles.LayoutDiv style={{ width: '1200px', margin: '0 auto' }}>
+      <Styles.LayoutDiv>
         <ReactGridLayout
           className="layout"
 
