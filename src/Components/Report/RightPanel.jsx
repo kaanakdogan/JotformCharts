@@ -7,12 +7,12 @@ import ColorPicker from '../ColorPicker';
 export default function RightPanel({
   chart, setSelected, setChartType, setDataType, setColors,
 }) {
-  const [options, setOptions] = React.useState([]);
   const [questions, setQuestions] = React.useState([]);
   const [data] = React.useContext(FormDataContext);
 
   React.useEffect(() => {
     if (chart) {
+      console.log(chart);
       if (chart.options.dataType == 3 || chart.options.dataType == 4) {
         const qs = data.questions.filter((q) => q.type === 'control_rating'
         || q.type === 'control_number');
@@ -38,12 +38,6 @@ export default function RightPanel({
       setQuestions(qs);
     }
   }, [chart]);
-
-  React.useEffect(() => {
-    const qs = questions;
-    setOptions(qs);
-    console.log(qs);
-  }, [questions]);
 
   const onQuestionSelect = (qid) => {
     setSelected(qid);

@@ -33,12 +33,13 @@ function Login({ location }) {
       .then(() => {
         setAuth(true);
         const formProm = promisify(global.JF.getForms);
-        console.log(location.pathname);
         formProm({ limit: 200 })
           .then((res) => {
             setForms(res);
+            console.log(location.pathname);
             if (location.pathname != '/') {
-              if (res.find((r) => `/${r.id}` === location.pathname)) {
+              const check = location.pathname.split('/')[1];
+              if (res.find((r) => `${r.id}` === check)) {
                 History.push(location.pathname);
               } else {
                 History.push(`/${res[0].id}`);

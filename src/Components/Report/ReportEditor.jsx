@@ -12,30 +12,35 @@ function getDefaultQuestion(questions) {
 }
 
 export default function ReportEditor({ report, onReportEdit }) {
-  const [layouts, setLayouts] = React.useState(report.charts.map((l) => l.layout));
-  const [charts, setCharts] = React.useState(report.charts);
+  const [layouts, setLayouts] = React.useState();
+  const [charts, setCharts] = React.useState();
   const [questions] = React.useContext(FormDataContext);
   const [panel, setPanel] = React.useState(false);
   const [selected, setSelected] = React.useState();
 
   React.useEffect(() => {
-    setLayouts(report.charts.map((l) => l.layout));
-    setCharts(report.charts);
+    console.log(report);
+    if (report && report.charts) {
+      setLayouts(report.charts.map((l) => l.layout));
+      setCharts(report.charts);
+    }
   }, [report]);
 
   // Save layout and charts on editing either of those.
   React.useEffect(() => {
-    const reportToReturn = JSON.parse(JSON.stringify(report));
-    reportToReturn.charts = [];
-    for (let c = 0; c < layouts.length; c++) {
-      const k = layouts[c].i;
-      reportToReturn.charts.push({
-        layout: layouts.filter((l) => l.i == k)[0],
-        i: k,
-        options: charts[c].options,
-      });
+    if (layouts && charts) {
+      const reportToReturn = JSON.parse(JSON.stringify(report));
+      reportToReturn.charts = [];
+      for (let c = 0; c < layouts.length; c++) {
+        const k = layouts[c].i;
+        reportToReturn.charts.push({
+          layout: layouts.filter((l) => l.i == k)[0],
+          i: k,
+          options: charts[c].options,
+        });
+      }
+      onReportEdit(reportToReturn);
     }
-    onReportEdit(reportToReturn);
   }, [layouts, charts]);
 
   const onLayoutsChange = (layout) => {
@@ -149,35 +154,39 @@ export default function ReportEditor({ report, onReportEdit }) {
   return (
     <>
       <button type="button" onClick={handleAdd}>New Chart</button>
-      <Styles.FlexContainer>
-        <Styles.MainItem>
-          <Styles.DocMain>
-            <Layout
-              charts={charts}
-              layout={layouts}
-              onLayoutChange={onLayoutsChange}
-              setPanel={togglePanel}
-              deleteChart={deleteChart}
-              chartSelection={[selected, setSelected]}
-            />
-          </Styles.DocMain>
-        </Styles.MainItem>
+      {charts ? (
+        <Styles.FlexContainer>
+          <Styles.MainItem>
+            <Styles.DocMain>
+              <Layout
+                charts={charts}
+                layout={layouts}
+                onLayoutChange={onLayoutsChange}
+                setPanel={togglePanel}
+                deleteChart={deleteChart}
+                chartSelection={[selected, setSelected]}
+              />
+            </Styles.DocMain>
+          </Styles.MainItem>
 
-        <Styles.RightItem isVisible={panel}>
-          <RightPanel
-            chart={charts.find((c) => {
-              console.log(c.i);
-              console.log(selected);
-              return c.i == selected;
-            })}
-            setSelected={setSelectedQuestion}
-            setChartType={setChartType}
-            setDataType={setDataType}
-            setColors={setColors}
-          />
-        </Styles.RightItem>
+          {panel ? (
+            <Styles.RightItem isVisible={panel}>
+              <RightPanel
+                chart={charts.find((c) => {
+                  console.log(c.i);
+                  console.log(selected);
+                  return c.i == selected;
+                })}
+                setSelected={setSelectedQuestion}
+                setChartType={setChartType}
+                setDataType={setDataType}
+                setColors={setColors}
+              />
+            </Styles.RightItem>
+          ) : null}
 
-      </Styles.FlexContainer>
+        </Styles.FlexContainer>
+      ) : null}
     </>
   );
 }

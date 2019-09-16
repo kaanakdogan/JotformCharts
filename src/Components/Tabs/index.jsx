@@ -2,6 +2,7 @@
 import React, { useState, useContext } from 'react';
 import * as Styles from './Styles';
 import { ModalContext } from '../../Contexts/ModalContext';
+import bread from '../../bread.svg';
 
 const Dropview = React.forwardRef((props, ref) => (
   <Styles.DropviewWrapper ref={ref}>
@@ -91,15 +92,15 @@ function Tab({
   if (active == id) {
     return (
       <Styles.tabItemActive onClick={handleClick}>
-        <span>
-          <a href={`#/${form}/${id}`} onClick={handleClick}>
-            <p ref={labelRef} contentEditable={isEditing} />
-          </a>
-        </span>
-        <span onClick={handleDropview}>
-          {'  X'}
+        <a href={`#/${form}/${id}`} onClick={handleClick}>
+          <Styles.EditableWrapper>
+            <Styles.p ref={labelRef} contentEditable={isEditing} />
+          </Styles.EditableWrapper>
+        </a>
+        <Styles.dropToggle onClick={handleDropview}>
+          <Styles.Img src={bread} />
           {dropview ? <Dropview ref={eventRef} startEdit={startEditing} close={setDropview} deleteReport={deleteReport} /> : null}
-        </span>
+        </Styles.dropToggle>
       </Styles.tabItemActive>
     );
   }
@@ -140,20 +141,23 @@ export default function Tabs({
 
 
   return (
+
     <Styles.tabList>
-      {children.map((child) => (
-        <Tab
-          key={child.props.id}
-          label={child.props.label}
-          onClick={setActive}
-          active={activeTab}
-          id={child.props.id}
-          form={child.props.form}
-          editName={editReportName}
-          deleteReport={delReport}
-        />
-      ))}
-      <Tab key="-1" id="-1" label="New Report" onClick={newReportClick} />
+      <Styles.tabsWrapper>
+        {children.map((child) => (
+          <Tab
+            label={child.props.label}
+            onClick={setActive}
+            active={activeTab}
+            key={child.props.id}
+            id={child.props.id}
+            form={child.props.form}
+            editName={editReportName}
+            deleteReport={delReport}
+          />
+        ))}
+        <Tab key="-1" id="-1" label="New Report" onClick={newReportClick} />
+      </Styles.tabsWrapper>
     </Styles.tabList>
   );
 }

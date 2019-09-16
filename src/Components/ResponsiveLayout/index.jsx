@@ -3,7 +3,8 @@ import RGL, { WidthProvider } from 'react-grid-layout';
 import ChartController from '../Charts';
 import { FormDataContext } from '../../Contexts/FormsContext';
 import * as Styles from './styles';
-
+import { SubmissionsContext } from '../../Contexts/SubmissionsContext';
+import Loading from '../Loading';
 
 const ReactGridLayout = WidthProvider(RGL);
 
@@ -12,6 +13,7 @@ export default function Layout({
 }) {
   const [data] = React.useContext(FormDataContext);
   const [selected, setSelected] = chartSelection;
+  const [submissions] = React.useContext(SubmissionsContext);
 
   const selectChart = (key) => {
     setSelected(key);
@@ -29,9 +31,11 @@ export default function Layout({
     setSelected(null);
   }, [data]);
 
+  if (!submissions || submissions.length === 0) {
+    return (<Loading />);
+  }
   return (
     <Styles.DocArea>
-
       <Styles.LayoutDiv style={{ width: '1200px', margin: '0 auto' }}>
         <ReactGridLayout
           className="layout"
