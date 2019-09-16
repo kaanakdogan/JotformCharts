@@ -1,19 +1,23 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "75b2ddad0cf2dfc33c71574a9a4484be",
+    "revision": "03562c7dff7e777a748605fc6d387068",
     "url": "/JotformCharts/index.html"
   },
   {
-    "revision": "1bb53b979e41fbbf5470",
-    "url": "/JotformCharts/static/js/2.89b5b2e1.chunk.js"
+    "revision": "9c420e11d81dd2128d57",
+    "url": "/JotformCharts/static/js/2.63990fb1.chunk.js"
   },
   {
-    "revision": "fa690352ea918eb85bd9",
-    "url": "/JotformCharts/static/js/main.948056e6.chunk.js"
+    "revision": "9f115c3e4cfa89fe279c",
+    "url": "/JotformCharts/static/js/main.c0030b86.chunk.js"
   },
   {
     "revision": "dd01527e72825e592e9d",
     "url": "/JotformCharts/static/js/runtime~main.585dac56.js"
+  },
+  {
+    "revision": "460bde6d742e4b6bb061ae9ef561e49b",
+    "url": "/JotformCharts/static/media/bread.460bde6d.svg"
   },
   {
     "revision": "85846383a055bdbe42e87ecf1fd6f875",
