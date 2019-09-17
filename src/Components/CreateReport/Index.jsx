@@ -8,7 +8,7 @@ import { ModalContext } from '../../Contexts/ModalContext';
 export default function CreateReport() {
   const [txt, setName] = useState('');
   const [formData] = React.useContext(FormDataContext);
-  const [, setModal] = React.useContext(ModalContext);
+  const [modal, setModal] = React.useContext(ModalContext);
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
@@ -21,6 +21,9 @@ export default function CreateReport() {
       name: txt,
       charts: [],
     }).then(() => {
+      if (modal.callback) {
+        modal.callback();
+      }
       setModal({
         isOpen: false,
         modalName: 'createReport',

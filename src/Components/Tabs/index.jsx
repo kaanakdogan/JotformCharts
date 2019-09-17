@@ -111,7 +111,7 @@ function Tab({
 }
 
 export default function Tabs({
-  children, active, editName, deleteReport,
+  children, active, editName, deleteReport, cb,
 }) {
   const [, setModal] = useContext(ModalContext);
   const [activeTab, setActiveTab] = useState(active);
@@ -120,6 +120,7 @@ export default function Tabs({
     setModal({
       isOpen: true,
       modalName: 'createReport',
+      callback: cb,
     });
   };
 

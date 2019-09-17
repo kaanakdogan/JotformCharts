@@ -23,17 +23,24 @@ export default function ReportEditor({ report, onReportEdit }) {
   const [questions] = React.useContext(FormDataContext);
   const [panel, setPanel] = React.useState(false);
   const [selected, setSelected] = React.useState();
+  const [didMount, setDidMount] = React.useState(false);
 
   React.useEffect(() => {
     console.log(report);
     if (report && report.charts) {
       setLayouts(report.charts.map((l) => l.layout));
       setCharts(report.charts);
+      setDidMount(true);
     }
   }, [report]);
 
   // Save layout and charts on editing either of those.
   React.useEffect(() => {
+    if (didMount) {
+      setDidMount(false);
+      return;
+    }
+
     if (layouts && charts) {
       if (layouts.length !== charts.length) {
         return;

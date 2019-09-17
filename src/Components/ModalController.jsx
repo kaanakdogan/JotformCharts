@@ -1,9 +1,11 @@
 import React, { useContext } from 'react';
 import { ThemeProvider } from 'styled-components';
+import { Link } from 'react-router-dom';
 import List from './FormsList/Index';
 import CreateReport from './CreateReport/Index';
 import { ModalView } from './Modal/Index';
 import { ModalContext } from '../Contexts/ModalContext';
+import Loading from './Loading';
 
 const FullScreenTheme = {
   modalContainer: {
@@ -64,7 +66,12 @@ export default function ModalController() {
   } if (modal.modalName === 'errorModal') {
     return (
       <ThemeProvider theme={CreateReportTheme}>
-        <ModalView header="Report Not Found"><a href={modal.redirectUrl} onClick={goBack}> Go back ?</a></ModalView>
+        <ModalView header="Report Not Found">
+          <Link to={{ pathname: modal.redirectUrl }} onClick={goBack}>
+           Go back ?
+          </Link>
+
+        </ModalView>
       </ThemeProvider>
     );
   } if (modal.modalName === 'unAuth') {
