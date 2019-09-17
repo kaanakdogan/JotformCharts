@@ -77,7 +77,7 @@ export default function ModalController() {
   } if (modal.modalName === 'unAuth') {
     return (
       <ThemeProvider theme={FullScreenTheme}>
-        <ModalView header="Unauthorized Access"><button type="button" onClick={pickForm}>Pick a Form ?</button></ModalView>
+        <ModalView header="Unauthorized Access" isNotClose><button type="button" onClick={pickForm}>Pick a Form ?</button></ModalView>
       </ThemeProvider>
     );
   } if (modal.modalName === 'loading') {

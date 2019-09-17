@@ -5,9 +5,11 @@ import Dropdown from '../Dropdown';
 import ColorPicker from '../ColorPicker';
 
 export default function RightPanel({
-  chart, setSelected, setChartType, setDataType, setColors,
+  chart, setSelected, setChartType, setDataType, setColors, setChecked,
 }) {
   const [questions, setQuestions] = React.useState([]);
+  const [scndQuestions, setScndQuestions] = React.useState([]);
+  const [multiple, setMultiple] = React.useState(false);
   const [data] = React.useContext(FormDataContext);
   const [dataOptions, setDataOptions] = React.useState([{
     qid: '1',
@@ -69,6 +71,9 @@ export default function RightPanel({
 
       setQuestions(qs);
     }
+
+    const qs = data.questions.filter((q) => q.type === 'control_datetime');
+    setScndQuestions(qs);
   }, [chart]);
 
   React.useEffect(() => {
@@ -84,6 +89,10 @@ export default function RightPanel({
 
   const onQuestionSelect = (qid) => {
     setSelected(qid);
+  };
+
+  const onSecondQSelect = (qid) => {
+    setChecked(multiple, qid);
   };
 
   const onChartTypeSelect = (type) => {
@@ -141,11 +150,28 @@ export default function RightPanel({
   };
 
   const def4 = () => {
+    if (chart && chart.options && chart.options.second) {
+      const ret = scndQuestions.find((q) => q.qid === chart.options.second.qid);
+      if (ret) {
+        return ret;
+      }
+
+      return scndQuestions[0];
+    }
+    return scndQuestions[0];
+  };
+
+  const def5 = () => {
     if (chart && chart.options) {
       return chart.options.colors;
     }
 
     return ['#a8e0ff', '#8ee3f5', '#70cad1', '#3e517a', '#b08ea2', '#BBB6DF'];
+  };
+
+  const handleChange = (bool) => {
+    setMultiple(bool);
+    setChecked(bool, def4().qid);
   };
 
   return (
@@ -154,7 +180,29 @@ export default function RightPanel({
       <Dropdown def={def()} options={typeOptions} onSelect={onChartTypeSelect} />
       <Dropdown def={def2()} options={dataOptions} onSelect={onDataTypeSelect} />
       {questions && questions.length !== 0 ? <Dropdown def={def3()} options={questions} onSelect={onQuestionSelect} /> : null}
-      <ColorPicker isMultiple={chart && chart.options.type === 'pie'} colors={def4()} onColorsChange={setColors} />
+      <Checkbox handleChange={handleChange} />
+      {multiple ? <Dropdown def={def4().text} options={scndQuestions} onSelect={onSecondQSelect} /> : null}
+      <ColorPicker isMultiple={chart && chart.options.type === 'pie'} colors={def5()} onColorsChange={setColors} />
+    </div>
+  );
+}
+
+function Checkbox({ handleChange }) {
+  const [state, setState] = React.useState(false);
+
+  const handleInputChange = (e) => {
+    setState(e.target.checked);
+    handleChange(e.target.checked);
+  };
+
+  return (
+    <div>
+      <input
+        type="checkbox"
+        checked={state}
+        onChange={handleInputChange}
+      />
+      Checkbox
     </div>
   );
 }

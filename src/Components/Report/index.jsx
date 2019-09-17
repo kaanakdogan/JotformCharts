@@ -16,21 +16,25 @@ async function GetSubmissions(formId) {
 }
 
 export default function Reports({ match, location }) {
-  const [, setData] = React.useContext(FormDataContext);
+  const [data, setData] = React.useContext(FormDataContext);
   const [, setSubmissions] = React.useContext(SubmissionsContext);
   const [modal, setModal] = React.useContext(ModalContext);
   const [reports, setReports] = React.useState([]);
   const [active, setActive] = React.useState();
   const [didMount, setDidMount] = React.useState(false);
 
+  const getReports = () => {
+    const prom = GetFormReports(match.params.id);
+    prom.then((res) => setReports(res));
+  };
+
   const editReport = (report) => {
+    console.log(report);
     EditReport(match.params.id, report);
   };
 
   const deleteReport = (repId) => {
-    RemoveReport(match.params.id, repId).then((res) => {
-      setReports(res.find((r) => r.id == match.params.id).reports);
-    });
+    RemoveReport(match.params.id, repId).then(() => getReports());
   };
 
   const getParams = (pathname) => {
@@ -40,12 +44,15 @@ export default function Reports({ match, location }) {
     return (matchProfile && matchProfile.params) || {};
   };
 
-  const getReports = () => {
-    const prom = GetFormReports(match.params.id);
-    prom.then((res) => setReports(res));
-  };
+  React.useEffect(() => {
+    setModal({ isOpen: true, modalName: 'loading' });
+  }, []);
 
   React.useEffect(() => {
+    if (data.id === match.params.id) {
+      return;
+    }
+
     setModal({ isOpen: true, modalName: 'loading' });
     setDidMount(false);
     const prom = promisify(global.JF.getFormQuestions);
@@ -55,8 +62,6 @@ export default function Reports({ match, location }) {
           id: match.params.id,
           questions: Object.values(res),
         });
-        setDidMount(true);
-        setModal({ isOpen: false });
       })
       .then(() => {
         GetSubmissions(match.params.id).then((r) => setSubmissions(r));
@@ -68,38 +73,46 @@ export default function Reports({ match, location }) {
           redirectUrl: '',
         });
       });
-  }, [match.params.id]);
 
-  React.useEffect(() => {
-    if (!match.params.id) {
-      return;
-    }
-
-    const prom = GetFormReports(match.params.id);
-    prom.then((reps) => {
+    const prom2 = GetFormReports(match.params.id);
+    prom2.then((reps) => {
       if (!reps) {
         setReports([]);
-        if (!modal.isOpen) {
-          setModal({
-            isOpen: true,
-            modalName: 'createReport',
-            redirectUrl: '',
-            callback: getReports,
-          });
-        }
       } else {
         setReports(reps);
-        // setModal({ isOpen: false, modalName: 'loading' });
       }
+      setDidMount(true);
+      setModal({ isOpen: false });
     });
   }, [match.params.id]);
 
+  React.useEffect(() => {
+    if (didMount && reports.length === 0) {
+      setModal({
+        isOpen: true,
+        modalName: 'createReport',
+        redirectUrl: '',
+        callback: getReports,
+      });
+    }
+  }, [didMount, reports]);
+
+  // React.useEffect(() => {
+  //   const rep = getParams(location.pathname);
+
+  //   if(rep != active) {
+  //     if(reports.find(r => r.id == rep)) {
+
+  //     }
+  //   }
+  // }, [location.pathname]);
+
   return (
     <>
-      <Header />
       {didMount
         ? (
           <>
+            <Header />
             <ReportPicker
               active={active}
               reports={reports}

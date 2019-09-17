@@ -117,13 +117,19 @@ export default function mapQuestionAnswers(qid) {
   };
 }
 
-export function mapSubmissionsByDate() {
+export function mapSubmissionsByDate(qid) {
   return function reducer(array, current) {
     if (!array) {
       array = [];
     }
 
-    const label = current.created_at.split(' ')[0];
+    let label;
+    if (qid) {
+      label = dateToLabel(current.answers[qid].answer);
+      console.log({ qid, label, answ: current.answers });
+    } else {
+      label = current.created_at.split(' ')[0];
+    }
 
     if (array.filter((o) => o.label === label).length === 0) {
       array.push({

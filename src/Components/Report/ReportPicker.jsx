@@ -6,28 +6,28 @@ import { ModalContext } from '../../Contexts/ModalContext';
 export default function ReportPicker({
   reports, form, active, editReport, deleteReport, cb,
 }) {
-  const [rep, setRep] = React.useState([]);
-  const [, setModal] = React.useContext(ModalContext);
   const [reps, setReps] = React.useState([]);
 
   React.useEffect(() => {
   }, [active]);
 
   React.useEffect(() => {
-    if (reports && reports.length !== 0) {
+    if (reports) {
       const sorted = reports.sort((r1, r2) => r1.id - r2.id);
       setReps(sorted);
     }
   }, [reports]);
 
   const onReportEdit = (report) => {
-    editReport(form, report);
+    editReport(report);
   };
 
   const onEditReportName = (newName, id) => {
     const reportToReturn = JSON.parse(JSON.stringify(reports.find((r) => r.id === id)));
 
     reportToReturn.name = newName;
+
+    console.log(reportToReturn);
 
     onReportEdit(reportToReturn);
   };

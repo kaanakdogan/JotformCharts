@@ -69,6 +69,8 @@ export async function EditReport(formId, report) {
     formReports = [];
   }
 
+  console.log(report);
+
   formReports = formReports.filter((r) => r.id !== report.id);
   formReports.push(report);
 

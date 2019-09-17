@@ -32,7 +32,11 @@ export default function ChartController({
         d = submissions.reduce(mapQuestionAnswers(opts.qid), []);
         break;
       case '2':
-        d = submissions.reduce(mapSubmissionsByDate(), []);
+        if (opts.second && opts.second.isChecked) {
+          d = submissions.reduce(mapSubmissionsByDate(opts.second.qid), []);
+        } else {
+          d = submissions.reduce(mapSubmissionsByDate(), []);
+        }
         break;
       case '3':
         d = getAvarageByDate(opts.qid, submissions);

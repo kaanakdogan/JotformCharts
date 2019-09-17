@@ -13,7 +13,6 @@ function Login({ location }) {
   const [, setForms] = useContext(FormsContext);
 
   useEffect(() => {
-    // CleanDatabase();
     const prom = promisify(global.JF.getUser);
     prom()
       .then(() => {
