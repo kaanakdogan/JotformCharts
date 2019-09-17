@@ -27,13 +27,17 @@ function labelConvert(submission) {
   return submission.answer;
 }
 
-function handleSingleChoice(array, submission) {
+function handleSingleChoice(array, submission, value) {
   const label = labelConvert(submission);
 
   if (array.filter((o) => o.label === label).length !== 0) {
     array.map((cur) => {
+      console.log({ cur, label, value });
       if (cur.label === label) {
-        return cur.value++;
+        console.log(cur.value + value);
+        const ret = cur;
+        ret.value += value;
+        return ret;
       }
       return cur;
     });
@@ -44,17 +48,16 @@ function handleSingleChoice(array, submission) {
   if (submission.answer) {
     array.push({
       label,
-      value: 1,
+      value,
     });
   }
   return array;
 }
 
-function handleMultiChoice(array, submission) {
+function handleMultiChoice(array, submission, value) {
   if (!submission.answer) {
     return array;
   }
-
 
   for (let i = 0; i < submission.answer.length; i++) {
     const myArr = array.filter((cur) => cur.label === submission.answer[i]);
@@ -67,7 +70,7 @@ function handleMultiChoice(array, submission) {
 
     array.map((cur) => {
       if (cur.label === submission.answer[i]) {
-        return cur.value++;
+        return cur.value + value;
       }
       return cur;
     });
@@ -99,21 +102,23 @@ function handleRating(array, submission) {
   return array;
 }
 
-export default function mapQuestionAnswers(qid) {
+export default function mapQuestionAnswers(qid, qid2) {
   return function reducer(array, current) {
     if (!array) {
       array = [];
     }
 
+    const answ2 = qid2 ? Number(current.answers[qid2].answer) : 1;
+
     if (current.answers[qid].type === 'control_checkbox') {
-      return handleMultiChoice(array, current.answers[qid]);
+      return handleMultiChoice(array, current.answers[qid], answ2);
     }
 
     if (current.answers[qid].type === 'control_rating') {
       return handleRating(array, current.answers[qid]);
     }
 
-    return handleSingleChoice(array, current.answers[qid]);
+    return handleSingleChoice(array, current.answers[qid], answ2);
   };
 }
 
@@ -126,7 +131,6 @@ export function mapSubmissionsByDate(qid) {
     let label;
     if (qid) {
       label = dateToLabel(current.answers[qid].answer);
-      console.log({ qid, label, answ: current.answers });
     } else {
       label = current.created_at.split(' ')[0];
     }

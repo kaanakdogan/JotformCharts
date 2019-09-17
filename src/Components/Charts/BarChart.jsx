@@ -21,7 +21,6 @@ export default function BarChart(props) {
   const myChart = useRef(null);
 
   useEffect(() => {
-    console.log(props.data);
     myChart.current = new Chart(canvasRef.current, {
       type: 'bar',
       options: opts,

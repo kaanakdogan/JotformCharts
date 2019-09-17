@@ -29,7 +29,11 @@ export default function ChartController({
     let d;
     switch (opts.dataType) {
       case '1':
-        d = submissions.reduce(mapQuestionAnswers(opts.qid), []);
+        if (opts.second && opts.second.isChecked) {
+          d = submissions.reduce(mapQuestionAnswers(opts.qid, opts.second.qid), []);
+        } else {
+          d = submissions.reduce(mapQuestionAnswers(opts.qid), []);
+        }
         break;
       case '2':
         if (opts.second && opts.second.isChecked) {
@@ -49,8 +53,9 @@ export default function ChartController({
         break;
     }
 
+    console.log(d);
     setData(d);
-  }, [opts.qid, opts.dataType, opts.type, submissions]);
+  }, [opts.qid, opts.dataType, opts.type, opts.second, submissions]);
 
   const handleClick = (e) => {
     onClick(index);

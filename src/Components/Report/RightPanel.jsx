@@ -1,79 +1,93 @@
+/* eslint-disable react/prop-types */
 import React from 'react';
 import * as Styles from './styles';
 import { FormDataContext } from '../../Contexts/FormsContext';
 import Dropdown from '../Dropdown';
 import ColorPicker from '../ColorPicker';
 
+const standardOptions = [{
+  qid: '1',
+  text: 'Submission Count / Question',
+}, {
+  qid: '2',
+  text: 'Submission Count / Date',
+}, {
+  qid: '3',
+  text: 'Average / Date',
+}, {
+  qid: '4',
+  text: 'Highest / Date',
+}];
+
+const typeOptions = [
+  { qid: 'bar', text: 'Bar' },
+  { qid: 'pie', text: 'Pie' },
+  { qid: 'line', text: 'Line' }];
+
+const stdTypeCondition = (type) => {
+  if (type === 'control_datetime' || type === 'control_time' || type === 'control_dropdown'
+  || type === 'control_radio' || type === 'control_checkbox' || type === 'control_rating'
+  || type === 'control_number') {
+    return true;
+  }
+  return false;
+};
+
+
 export default function RightPanel({
   chart, setSelected, setChartType, setDataType, setColors, setChecked,
 }) {
   const [questions, setQuestions] = React.useState([]);
   const [scndQuestions, setScndQuestions] = React.useState([]);
-  const [multiple, setMultiple] = React.useState(false);
+  const [multiple, setMultiple] = React.useState();
   const [data] = React.useContext(FormDataContext);
-  const [dataOptions, setDataOptions] = React.useState([{
-    qid: '1',
-    text: 'Submission Count / Question',
-  }, {
-    qid: '2',
-    text: 'Submission Count / Date',
-  }, {
-    qid: '3',
-    text: 'Average of Answers / Date',
-  }, {
-    qid: '4',
-    text: 'Highest of Answers / Date',
-  }]);
+  const [dataOptions, setDataOptions] = React.useState(standardOptions);
+
+  const setQuestionsFromTypes = () => {
+    const { options } = chart;
+    if (options.dataType === '3' || options.dataType === '4') {
+      const qs = data.questions.filter((q) => q.type === 'control_rating'
+      || q.type === 'control_number');
+
+      setQuestions(qs);
+    } else if (options.dataType === '2') {
+      setQuestions(null);
+
+      const qs = data.questions.filter((q) => q.type === 'control_datetime');
+      setScndQuestions(qs);
+    } else {
+      const qs = data.questions.filter((q) => stdTypeCondition(q.type));
+      setQuestions(qs);
+
+      const qs2 = data.questions.filter((q) => q.type === 'control_number');
+      setScndQuestions(qs2);
+    }
+  };
 
   React.useEffect(() => {
     if (chart) {
-      if (chart.options.qid === -1) {
+      const { options } = chart;
+      if (options.qid === -1) {
         setDataOptions([{
           qid: '2',
           text: 'Submission Count / Date',
         }]);
       } else {
-        setDataOptions([{
-          qid: '1',
-          text: 'Submission Count / Question',
-        }, {
-          qid: '2',
-          text: 'Submission Count / Date',
-        }, {
-          qid: '3',
-          text: 'Average of Answers / Date',
-        }, {
-          qid: '4',
-          text: 'Highest of Answers / Date',
-        }]);
+        setDataOptions(standardOptions);
       }
 
-      if (chart.options.dataType == 3 || chart.options.dataType == 4) {
-        const qs = data.questions.filter((q) => q.type === 'control_rating'
-        || q.type === 'control_number');
-
-        setQuestions(qs);
-      } else if (chart.options.dataType == 2) {
-        setQuestions(null);
-      } else {
-        const qs = data.questions.filter((q) => q.type === 'control_datetime'
-      || q.type === 'control_time' || q.type === 'control_dropdown'
-      || q.type === 'control_radio' || q.type === 'control_checkbox'
-      || q.type === 'control_rating' || q.type === 'control_number');
-
-        setQuestions(qs);
-      }
+      setQuestionsFromTypes();
     } else {
-      const qs = data.questions.filter((q) => q.type === 'control_datetime'
-      || q.type === 'control_time' || q.type === 'control_dropdown'
-      || q.type === 'control_radio' || q.type === 'control_checkbox'
-      || q.type === 'control_rating' || q.type === 'control_number');
+      const qs = data.questions.filter((q) => stdTypeCondition(q.type));
 
       setQuestions(qs);
     }
 
-    const qs = data.questions.filter((q) => q.type === 'control_datetime');
-    setScndQuestions(qs);
+    if (chart.options.second && chart.options.second.isChecked !== multiple) {
+      setMultiple(chart.options.second.isChecked);
+    } else {
+      setMultiple(false);
+    }
   }, [chart]);
 
   React.useEffect(() => {
@@ -102,24 +116,8 @@ export default function RightPanel({
   const onDataTypeSelect = (type) => {
     setDataType(type);
 
-    if (type == 3 || type == 4) {
-      const qs = data.questions.filter((q) => q.type === 'control_rating'
-      || q.type === 'control_number');
-
-      setQuestions(qs);
-    } else if (type == 2) {
-      setQuestions(null);
-    } else {
-      const qs = data.questions.filter((q) => q.type === 'control_datetime'
-        || q.type === 'control_time' || q.type === 'control_dropdown'
-        || q.type === 'control_radio' || q.type === 'control_checkbox'
-        || q.type === 'control_rating' || q.type === 'control_number');
-
-      setQuestions(qs);
-    }
+    setQuestionsFromTypes();
   };
-
-  const typeOptions = [{ qid: 'bar', text: 'Bar' }, { qid: 'pie', text: 'Pie' }, { qid: 'line', text: 'Line' }];
 
   const def = () => {
     if (chart && chart.options) {
@@ -169,9 +167,9 @@ export default function RightPanel({
     return ['#a8e0ff', '#8ee3f5', '#70cad1', '#3e517a', '#b08ea2', '#BBB6DF'];
   };
 
-  const handleChange = (bool) => {
-    setMultiple(bool);
-    setChecked(bool, def4().qid);
+  const handleInputChange = (e) => {
+    setMultiple(e.target.checked);
+    setChecked(e.target.checked, def4().qid);
   };
 
   return (
@@ -180,29 +178,22 @@ export default function RightPanel({
       <Dropdown def={def()} options={typeOptions} onSelect={onChartTypeSelect} />
       <Dropdown def={def2()} options={dataOptions} onSelect={onDataTypeSelect} />
       {questions && questions.length !== 0 ? <Dropdown def={def3()} options={questions} onSelect={onQuestionSelect} /> : null}
-      <Checkbox handleChange={handleChange} />
+      <Checkbox state={multiple} handleChange={handleInputChange} />
       {multiple ? <Dropdown def={def4().text} options={scndQuestions} onSelect={onSecondQSelect} /> : null}
       <ColorPicker isMultiple={chart && chart.options.type === 'pie'} colors={def5()} onColorsChange={setColors} />
     </div>
   );
 }
 
-function Checkbox({ handleChange }) {
-  const [state, setState] = React.useState(false);
-
-  const handleInputChange = (e) => {
-    setState(e.target.checked);
-    handleChange(e.target.checked);
-  };
-
+function Checkbox({ state, handleChange }) {
   return (
     <div>
       <input
         type="checkbox"
         checked={state}
-        onChange={handleInputChange}
+        onChange={handleChange}
       />
-      Checkbox
+      Get value from another field
     </div>
   );
 }
