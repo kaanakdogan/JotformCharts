@@ -47,7 +47,7 @@ export function ModalView(props) {
         <Styles.ModalWrapper>
           <Styles.ModalContainer>
             <Styles.ModalCont>
-              <Styles.Close onClick={handleClick} />
+              {props.isNotClose ? null : <Styles.Close onClick={handleClick} />}
               <Styles.Header>
                 {props.header}
               </Styles.Header>

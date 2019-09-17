@@ -46,6 +46,7 @@ export default function Reports({ match, location }) {
   };
 
   React.useEffect(() => {
+    setModal({ isOpen: true, modalName: 'loading' });
     setDidMount(false);
     const prom = promisify(global.JF.getFormQuestions);
     prom(match.params.id)
@@ -55,6 +56,7 @@ export default function Reports({ match, location }) {
           questions: Object.values(res),
         });
         setDidMount(true);
+        setModal({ isOpen: false });
       })
       .then(() => {
         GetSubmissions(match.params.id).then((r) => setSubmissions(r));

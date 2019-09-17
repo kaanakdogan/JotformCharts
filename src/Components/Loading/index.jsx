@@ -23,7 +23,7 @@ const Idle = styled.div`
     position: absolute;
     left: 6px;
     width: 13px;
-    background: #fff;
+    background: #cef;
     animation: ${Anim} 1.2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
   }
 
@@ -47,6 +47,7 @@ const Wrapper = styled.div`
 width: 100%;
 height: 100%;
 text-align: center;
+margin-top: 200px;
 `;
 
 export default function Loading() {

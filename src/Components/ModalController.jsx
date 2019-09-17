@@ -80,6 +80,14 @@ export default function ModalController() {
         <ModalView header="Unauthorized Access"><button type="button" onClick={pickForm}>Pick a Form ?</button></ModalView>
       </ThemeProvider>
     );
+  } if (modal.modalName === 'loading') {
+    return (
+      <ThemeProvider theme={FullScreenTheme}>
+        <ModalView header="Loading" isNotClose>
+          <Loading />
+        </ModalView>
+      </ThemeProvider>
+    );
   }
   return (
     <ThemeProvider theme={FullScreenTheme}>

@@ -20,22 +20,6 @@ export default function ReportPicker({
     }
   }, [reports]);
 
-  React.useEffect(() => {
-    // if (reports && active && !reports.find((r) => r.id === Number(active))) {
-    //   setModal({
-    //     isOpen: true,
-    //     modalName: 'errorModal',
-    //     redirectUrl: `/${form}`,
-    //   });
-    // } else {
-    //   setModal({
-    //     isOpen: false,
-    //     modalName: 'errorModal',
-    //     redirectUrl: '',
-    //   });
-    // }
-  }, [active]);
-
   const onReportEdit = (report) => {
     editReport(form, report);
   };
