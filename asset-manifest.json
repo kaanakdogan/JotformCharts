@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.js": "/JotformCharts/static/js/main.c0030b86.chunk.js",
-    "main.js.map": "/JotformCharts/static/js/main.c0030b86.chunk.js.map",
+    "main.js": "/JotformCharts/static/js/main.5e057c1b.chunk.js",
+    "main.js.map": "/JotformCharts/static/js/main.5e057c1b.chunk.js.map",
     "runtime~main.js": "/JotformCharts/static/js/runtime~main.585dac56.js",
     "runtime~main.js.map": "/JotformCharts/static/js/runtime~main.585dac56.js.map",
-    "static/js/2.63990fb1.chunk.js": "/JotformCharts/static/js/2.63990fb1.chunk.js",
-    "static/js/2.63990fb1.chunk.js.map": "/JotformCharts/static/js/2.63990fb1.chunk.js.map",
+    "static/js/2.ec5233c7.chunk.js": "/JotformCharts/static/js/2.ec5233c7.chunk.js",
+    "static/js/2.ec5233c7.chunk.js.map": "/JotformCharts/static/js/2.ec5233c7.chunk.js.map",
     "index.html": "/JotformCharts/index.html",
-    "precache-manifest.881da255d73e30a86d33a99f853cfa86.js": "/JotformCharts/precache-manifest.881da255d73e30a86d33a99f853cfa86.js",
+    "precache-manifest.d10d773dd6f1e6a86fe967b7736a423c.js": "/JotformCharts/precache-manifest.d10d773dd6f1e6a86fe967b7736a423c.js",
     "service-worker.js": "/JotformCharts/service-worker.js",
     "static/media/bread.svg": "/JotformCharts/static/media/bread.460bde6d.svg",
     "static/media/delete.svg": "/JotformCharts/static/media/delete.85846383.svg",
