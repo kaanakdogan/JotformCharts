@@ -1,4 +1,5 @@
 import localforage from 'localforage';
+import { async } from 'q';
 
 let reports = [];
 
@@ -20,6 +21,10 @@ export async function GetFormReports(formId) {
 
   console.log(reports);
 
+
+  setTimeout(() => {
+
+  }, 2000);
   if (reports) {
     // eslint-disable-next-line eqeqeq
     const formReps = reports.filter((r) => r.id == formId)[0];

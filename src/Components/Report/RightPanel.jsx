@@ -50,6 +50,9 @@ export default function RightPanel({
       || q.type === 'control_number');
 
       setQuestions(qs);
+
+      const qs2 = data.questions.filter((q) => q.type === 'control_datetime');
+      setScndQuestions(qs2);
     } else if (options.dataType === '2') {
       setQuestions(null);
 

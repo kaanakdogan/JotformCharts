@@ -97,16 +97,6 @@ export default function Reports({ match, location }) {
     }
   }, [didMount, reports]);
 
-  // React.useEffect(() => {
-  //   const rep = getParams(location.pathname);
-
-  //   if(rep != active) {
-  //     if(reports.find(r => r.id == rep)) {
-
-  //     }
-  //   }
-  // }, [location.pathname]);
-
   return (
     <>
       {didMount

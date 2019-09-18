@@ -26,7 +26,6 @@ export default function ReportEditor({ report, onReportEdit }) {
   const [didMount, setDidMount] = React.useState(false);
 
   React.useEffect(() => {
-    console.log(report);
     if (report && report.charts) {
       setLayouts(report.charts.map((l) => l.layout));
       setCharts(report.charts);

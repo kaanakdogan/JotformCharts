@@ -4,7 +4,9 @@ import * as Styles from './styles';
 import { SubmissionsContext } from '../../Contexts/SubmissionsContext';
 import Logo from '../../opt.svg';
 import del from '../../delete.svg';
-import mapQuestionAnswers, { mapSubmissionsByDate, getAvarageByDate, getHighestByDate } from './Utils';
+import mapQuestionAnswers, {
+  mapSubmissionsByDate, getAvarageByDate, getHighestByDate, getSumByDate,
+} from './Utils';
 import { FormDataContext } from '../../Contexts/FormsContext';
 import PieChart from './PieChart';
 import LineChart from './LineChart';
@@ -43,10 +45,24 @@ export default function ChartController({
         }
         break;
       case '3':
-        d = getAvarageByDate(opts.qid, submissions);
+        if (opts.second && opts.second.isChecked) {
+          d = getAvarageByDate(submissions, opts.qid, opts.second.qid);
+        } else {
+          d = getAvarageByDate(submissions, opts.qid);
+        }
         break;
       case '4':
-        d = getHighestByDate(opts.qid, submissions);
+        if (opts.second && opts.second.isChecked) {
+          d = getHighestByDate(submissions, 'week', opts.qid, opts.second.qid);
+        } else {
+          d = getHighestByDate(submissions, 'week', opts.qid);
+        }
+        break;
+      case '5':
+        if (opts.second && opts.second.isChecked) {
+          d = getSumByDate(submissions, opts.qid, opts.second.qid);
+        }
+        d = getSumByDate(submissions, opts.qid);
         break;
       default:
         d = submissions.reduce(mapQuestionAnswers(opts.qid), []);

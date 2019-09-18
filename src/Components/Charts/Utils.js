@@ -1,3 +1,5 @@
+/* eslint-disable func-names */
+/* eslint-disable no-extend-native */
 function dateToLabel(dateObj) {
   return `${dateObj.day}-${dateObj.month}-${dateObj.year}`;
 }
@@ -11,6 +13,49 @@ function timeToLabel(timeObj) {
   }
 
   return `${hour}:${minute}`;
+}
+
+function dateObjToLabel(date) {
+  return `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`;
+}
+
+Date.prototype.addDays = function (days) {
+  const date = new Date(this.valueOf());
+  date.setDate(date.getDate() + days);
+  return date;
+};
+
+function getDates(startDate, stopDate) {
+  const dateArray = new Array();
+  let currentDate = startDate;
+  while (currentDate <= stopDate) {
+    dateArray.push(new Date(currentDate));
+    currentDate = currentDate.addDays(7);
+  }
+  return dateArray;
+}
+
+function compareDates(date1, date2) {
+  const arr1 = date1.split('-');
+  const arr2 = date2.split('-');
+
+  const str1 = `${arr1[2]}${arr1[1]}${arr1[0]}`;
+  const str2 = `${arr2[2]}${arr2[1]}${arr2[0]}`;
+
+  return Number(str1) - Number(str2);
+}
+
+function parseDate(date) {
+  const arr = date.split('-');
+
+  return new Date(arr[2], Number(arr[1]) - 1, arr[0]);
+}
+
+function calcWeekNumber(from, to) {
+  const t1 = from.getTime();
+  const t2 = to.getTime();
+
+  return parseInt((t2 - t1) / (24 * 3600 * 1000 * 7), 10);
 }
 
 function labelConvert(submission) {
@@ -32,9 +77,7 @@ function handleSingleChoice(array, submission, value) {
 
   if (array.filter((o) => o.label === label).length !== 0) {
     array.map((cur) => {
-      console.log({ cur, label, value });
       if (cur.label === label) {
-        console.log(cur.value + value);
         const ret = cur;
         ret.value += value;
         return ret;
@@ -132,7 +175,8 @@ export function mapSubmissionsByDate(qid) {
     if (qid) {
       label = dateToLabel(current.answers[qid].answer);
     } else {
-      label = current.created_at.split(' ')[0];
+      const arr = current.created_at.split(' ')[0].split('-');
+      label = `${arr[2]}-${arr[1]}-${arr[0]}`;
     }
 
     if (array.filter((o) => o.label === label).length === 0) {
@@ -153,8 +197,7 @@ export function mapSubmissionsByDate(qid) {
   };
 }
 
-export function getAvarageByDate(qid, submissions) {
-  console.log(submissions);
+export function getAvarageByDate(submissions, qid, qid2) {
   function reducer(array, current) {
     if (!array) {
       array = [];
@@ -164,7 +207,13 @@ export function getAvarageByDate(qid, submissions) {
       return array;
     }
 
-    const date = current.created_at.split(' ')[0];
+    let date;
+    if (qid2) {
+      date = dateToLabel(current.answers[qid2].answer);
+    } else {
+      const arr = current.created_at.split(' ')[0].split('-');
+      date = `${arr[2]}-${arr[1]}-${arr[0]}`;
+    }
 
     if (array.find((e) => e.date === date)) {
       array.map((e) => {
@@ -208,8 +257,7 @@ export function getAvarageByDate(qid, submissions) {
 }
 
 
-export function getHighestByDate(qid, submissions) {
-  console.log(submissions);
+export function getHighestByDate(submissions, cat, qid, qid2) {
   function reducer(array, current) {
     if (!array) {
       array = [];
@@ -219,7 +267,13 @@ export function getHighestByDate(qid, submissions) {
       return array;
     }
 
-    const date = current.created_at.split(' ')[0];
+    let date;
+    if (qid2) {
+      date = dateToLabel(current.answers[qid2].answer);
+    } else {
+      const arr = current.created_at.split(' ')[0].split('-');
+      date = `${arr[2]}-${arr[1]}-${arr[0]}`;
+    }
 
     if (array.find((e) => e.date === date)) {
       array.map((e) => {
@@ -259,6 +313,89 @@ export function getHighestByDate(qid, submissions) {
       value: highest,
     });
   }
+
+  toReturn.sort((a, b) => compareDates(a.label, b.label));
+
+  if (cat === 'week') {
+    const weekArr = [];
+    const strtDate = parseDate(toReturn[0].label);
+    const endDate = parseDate(toReturn[toReturn.length - 1].label);
+    const weeks = getDates(strtDate, endDate);
+
+    for (let i = 0; i < weeks.length; i++) {
+      let value = 0;
+      for (let c = 0; c < toReturn.length; c++) {
+        if (calcWeekNumber(weeks[i], parseDate(toReturn[c].label)) === 0) {
+          value += toReturn[c].value;
+        }
+      }
+
+      weekArr.push({
+        label: dateObjToLabel(weeks[i]),
+        value,
+      });
+    }
+
+    return weekArr;
+  }
+
+  return toReturn;
+}
+
+export function getSumByDate(submissions, qid, qid2) {
+  function reducer(array, current) {
+    if (!array) {
+      array = [];
+    }
+
+    if (!current.answers[qid].answer) {
+      return array;
+    }
+
+    let date;
+    if (qid2) {
+      date = dateToLabel(current.answers[qid2].answer);
+    } else {
+      const arr = current.created_at.split(' ')[0].split('-');
+      date = `${arr[2]}-${arr[1]}-${arr[0]}`;
+    }
+
+    if (array.find((e) => e.date === date)) {
+      array.map((e) => {
+        if (e.date === date) {
+          const newArr = [...(e.values)];
+          newArr.push(current.answers[qid].answer);
+          e.values = newArr;
+          return e.values;
+        }
+
+        return e;
+      });
+    } else {
+      array.push({
+        date,
+        values: [current.answers[qid].answer],
+      });
+    }
+
+    return array;
+  }
+
+  const data = submissions.reduce(reducer, []);
+
+  const toReturn = [];
+  for (let i = 0; i < data.length; i++) {
+    let av = 0;
+    for (let c; c < data[i].values.length; c++) {
+      av += Number(data[i].values[c]);
+    }
+
+    toReturn.push({
+      label: data[i].date,
+      value: av,
+    });
+  }
+
 
   return toReturn;
 }
