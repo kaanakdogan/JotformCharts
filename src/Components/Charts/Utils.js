@@ -1,3 +1,6 @@
+/* eslint-disable eqeqeq */
+/* eslint-disable no-param-reassign */
+/* eslint-disable no-plusplus */
 /* eslint-disable func-names */
 /* eslint-disable no-extend-native */
 function dateToLabel(dateObj) {
@@ -26,6 +29,7 @@ Date.prototype.addDays = function (days) {
 };
 
 function getDates(startDate, stopDate) {
+  // eslint-disable-next-line no-array-constructor
   const dateArray = new Array();
   let currentDate = startDate;
   while (currentDate <= stopDate) {
@@ -39,8 +43,8 @@ function compareDates(date1, date2) {
   const arr1 = date1.split('-');
   const arr2 = date2.split('-');
 
-  const str1 = `${arr1[2]}${arr1[1]}${arr1[0]}`;
-  const str2 = `${arr2[2]}${arr2[1]}${arr2[0]}`;
+  const str1 = `${arr1[2]}${Number(arr1[1])}${arr1[0]}`;
+  const str2 = `${arr2[2]}${Number(arr2[1])}${arr2[0]}`;
 
   return Number(str1) - Number(str2);
 }
@@ -97,6 +101,7 @@ function handleSingleChoice(array, submission, value) {
   return array;
 }
 
+
 function handleMultiChoice(array, submission, value) {
   if (!submission.answer) {
     return array;
@@ -145,8 +150,8 @@ function handleRating(array, submission) {
   return array;
 }
 
-export default function mapQuestionAnswers(qid, qid2) {
-  return function reducer(array, current) {
+export default function mapQuestionAnswers(submissions, cat, qid, qid2) {
+  function reducer(array, current) {
     if (!array) {
       array = [];
     }
@@ -162,11 +167,15 @@ export default function mapQuestionAnswers(qid, qid2) {
     }
 
     return handleSingleChoice(array, current.answers[qid], answ2);
-  };
+  }
+
+  const data = submissions.reduce(reducer, []);
+
+  return data;
 }
 
-export function mapSubmissionsByDate(qid) {
-  return function reducer(array, current) {
+export function mapSubmissionsByDate(submissions, cat, qid) {
+  function reducer(array, current) {
     if (!array) {
       array = [];
     }
@@ -193,11 +202,40 @@ export function mapSubmissionsByDate(qid) {
       });
     }
 
+
     return array;
-  };
+  }
+
+  const toReturn = submissions.reduce(reducer, []);
+  toReturn.sort((a, b) => compareDates(a.label, b.label));
+
+  if (cat === 'week') {
+    const weekArr = [];
+    const strtDate = parseDate(toReturn[0].label);
+    const endDate = parseDate(toReturn[toReturn.length - 1].label);
+    const weeks = getDates(strtDate, endDate);
+
+    for (let i = 0; i < weeks.length; i++) {
+      let value = 0;
+      for (let c = 0; c < toReturn.length; c++) {
+        if ((calcWeekNumber(weeks[i], parseDate(toReturn[c].label)) === 0
+         && compareDates(toReturn[c].label, dateObjToLabel(weeks[i])) >= 0)) {
+          value += toReturn[c].value;
+        }
+      }
+
+      weekArr.push({
+        label: dateObjToLabel(weeks[i]),
+        value,
+      });
+    }
+
+    return weekArr;
+  }
+  return toReturn;
 }
 
-export function getAvarageByDate(submissions, qid, qid2) {
+export function getAvarageByDate(submissions, cat, qid, qid2) {
   function reducer(array, current) {
     if (!array) {
       array = [];
@@ -250,14 +288,46 @@ export function getAvarageByDate(submissions, qid, qid2) {
     toReturn.push({
       label: data[i].date,
       value: av,
+      count: c,
     });
   }
 
+  toReturn.sort((a, b) => compareDates(a.label, b.label));
+
+  if (cat === 'week') {
+    const weekArr = [];
+    const strtDate = parseDate(toReturn[0].label);
+    const endDate = parseDate(toReturn[toReturn.length - 1].label);
+    const weeks = getDates(strtDate, endDate);
+
+    for (let i = 0; i < weeks.length; i++) {
+      let value = 0;
+      let count = 0;
+      for (let c = 0; c < toReturn.length; c++) {
+        if (calcWeekNumber(weeks[i], parseDate(toReturn[c].label)) === 0
+         && compareDates(toReturn[c].label, dateObjToLabel(weeks[i])) >= 0) {
+          value += toReturn[c].value * toReturn[c].count;
+          count += toReturn[c].count;
+        }
+      }
+
+
+      weekArr.push({
+        label: dateObjToLabel(weeks[i]),
+        value: value / count,
+      });
+    }
+
+    return weekArr;
+  }
   return toReturn;
 }
 
 
 export function getHighestByDate(submissions, cat, qid, qid2) {
+  console.log({
+    submissions, cat, qid, qid2,
+  });
   function reducer(array, current) {
     if (!array) {
       array = [];
@@ -268,6 +338,95 @@ export function getHighestByDate(submissions, cat, qid, qid2) {
     }
 
     let date;
+    if (qid2) {
+      date = dateToLabel(current.answers[qid2].answer);
+    } else {
+      const arr = current.created_at.split(' ')[0].split('-');
+      date = `${arr[2]}-${arr[1]}-${arr[0]}`;
+    }
+
+    if (array.find((e) => e.date === date)) {
+      array.map((e) => {
+        if (e.date === date) {
+          const newArr = [...(e.values)];
+          newArr.push(current.answers[qid].answer);
+          e.values = newArr;
+          return e.values;
+        }
+
+        return e;
+      });
+    } else {
+      array.push({
+        date,
+        values: [current.answers[qid].answer],
+      });
+    }
+
+    return array;
+  }
+
+  const data = submissions.reduce(reducer, []);
+
+  const toReturn = [];
+  for (let i = 0; i < data.length; i++) {
+    let value = 0;
+    for (let c = 0; c < data[i].values.length; c++) {
+      if (value < Number(data[i].values[c])) {
+        value = Number(data[i].values[c]);
+      }
+    }
+
+
+    toReturn.push({
+      label: data[i].date,
+      value,
+    });
+  }
+
+  toReturn.sort((a, b) => compareDates(a.label, b.label));
+
+  if (cat === 'week') {
+    const weekArr = [];
+    const strtDate = parseDate(toReturn[0].label);
+    const endDate = parseDate(toReturn[toReturn.length - 1].label);
+    const weeks = getDates(strtDate, endDate);
+
+    for (let i = 0; i < weeks.length; i++) {
+      let value = 0;
+      for (let c = 0; c < toReturn.length; c++) {
+        if (calcWeekNumber(weeks[i], parseDate(toReturn[c].label)) === 0
+         && compareDates(toReturn[c].label, dateObjToLabel(weeks[i])) >= 0) {
+          if (value < toReturn[c].value) {
+            value = toReturn[c].value;
+          }
+        }
+      }
+
+      weekArr.push({
+        label: dateObjToLabel(weeks[i]),
+        value,
+      });
+    }
+
+    return weekArr;
+  }
+
+  return toReturn;
+}
+
+export function getSumByDate(submissions, cat, qid, qid2) {
+  function reducer(array, current) {
+    if (!array) {
+      array = [];
+    }
+
+    if (!current.answers[qid].answer) {
+      return array;
+    }
+
+    let date;
+    console.log(current.answers[qid2]);
     if (qid2) {
       date = dateToLabel(current.answers[qid2].answer);
     } else {
@@ -301,19 +460,17 @@ export function getHighestByDate(submissions, cat, qid, qid2) {
   const toReturn = [];
   for (let i = 0; i < data.length; i++) {
     let c = 0;
-    let highest = 0;
+    let av = 0;
     for (c; c < data[i].values.length; c++) {
-      if (highest < Number(data[i].values[c])) {
-        highest = Number(data[i].values[c]);
-      }
+      av += Number(data[i].values[c]);
     }
 
+    console.log(av);
     toReturn.push({
       label: data[i].date,
-      value: highest,
+      value: av,
     });
   }
-
   toReturn.sort((a, b) => compareDates(a.label, b.label));
 
   if (cat === 'week') {
@@ -325,7 +482,8 @@ export function getHighestByDate(submissions, cat, qid, qid2) {
     for (let i = 0; i < weeks.length; i++) {
       let value = 0;
       for (let c = 0; c < toReturn.length; c++) {
-        if (calcWeekNumber(weeks[i], parseDate(toReturn[c].label)) === 0) {
+        if ((calcWeekNumber(weeks[i], parseDate(toReturn[c].label)) === 0
+         && compareDates(toReturn[c].label, dateObjToLabel(weeks[i])) >= 0)) {
           value += toReturn[c].value;
         }
       }
@@ -339,63 +497,7 @@ export function getHighestByDate(submissions, cat, qid, qid2) {
     return weekArr;
   }
 
-  return toReturn;
-}
-
-export function getSumByDate(submissions, qid, qid2) {
-  function reducer(array, current) {
-    if (!array) {
-      array = [];
-    }
-
-    if (!current.answers[qid].answer) {
-      return array;
-    }
-
-    let date;
-    if (qid2) {
-      date = dateToLabel(current.answers[qid2].answer);
-    } else {
-      const arr = current.created_at.split(' ')[0].split('-');
-      date = `${arr[2]}-${arr[1]}-${arr[0]}`;
-    }
-
-    if (array.find((e) => e.date === date)) {
-      array.map((e) => {
-        if (e.date === date) {
-          const newArr = [...(e.values)];
-          newArr.push(current.answers[qid].answer);
-          e.values = newArr;
-          return e.values;
-        }
-
-        return e;
-      });
-    } else {
-      array.push({
-        date,
-        values: [current.answers[qid].answer],
-      });
-    }
-
-    return array;
-  }
-
-  const data = submissions.reduce(reducer, []);
-
-  const toReturn = [];
-  for (let i = 0; i < data.length; i++) {
-    let av = 0;
-    for (let c; c < data[i].values.length; c++) {
-      av += Number(data[i].values[c]);
-    }
-
-    toReturn.push({
-      label: data[i].date,
-      value: av,
-    });
-  }
-
+  console.log(toReturn);
 
   return toReturn;
 }

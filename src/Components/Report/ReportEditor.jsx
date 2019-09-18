@@ -157,6 +157,21 @@ export default function ReportEditor({ report, onReportEdit }) {
     setCharts(newCharts);
   };
 
+  const setDateType = (type) => {
+    const newCharts = charts.map((c) => {
+      if (c.i === selected) {
+        const newC = c;
+        newC.options.dateType = type;
+
+        return newC;
+      }
+
+      return c;
+    });
+
+    setCharts(newCharts);
+  };
+
   const setChecked = (bool, qid) => {
     const newCharts = charts.map((c) => {
       if (c.i === selected) {
@@ -217,6 +232,7 @@ export default function ReportEditor({ report, onReportEdit }) {
                 setDataType={setDataType}
                 setColors={setColors}
                 setChecked={setChecked}
+                setDateType={setDateType}
               />
             </Styles.RightItem>
           ) : null}

@@ -17,6 +17,9 @@ const standardOptions = [{
 }, {
   qid: '4',
   text: 'Highest / Date',
+}, {
+  qid: '5',
+  text: 'Sum / Date',
 }];
 
 const typeOptions = [
@@ -33,9 +36,14 @@ const stdTypeCondition = (type) => {
   return false;
 };
 
+const dateTypeOptions = [
+  { qid: 'day', text: 'Day' },
+  { qid: 'week', text: 'Week' },
+];
+
 
 export default function RightPanel({
-  chart, setSelected, setChartType, setDataType, setColors, setChecked,
+  chart, setSelected, setChartType, setDataType, setColors, setChecked, setDateType,
 }) {
   const [questions, setQuestions] = React.useState([]);
   const [scndQuestions, setScndQuestions] = React.useState([]);
@@ -45,7 +53,7 @@ export default function RightPanel({
 
   const setQuestionsFromTypes = () => {
     const { options } = chart;
-    if (options.dataType === '3' || options.dataType === '4') {
+    if (options.dataType === '3' || options.dataType === '4' || options.dataType === '5') {
       const qs = data.questions.filter((q) => q.type === 'control_rating'
       || q.type === 'control_number');
 
@@ -104,24 +112,6 @@ export default function RightPanel({
     }
   }, [questions]);
 
-  const onQuestionSelect = (qid) => {
-    setSelected(qid);
-  };
-
-  const onSecondQSelect = (qid) => {
-    setChecked(multiple, qid);
-  };
-
-  const onChartTypeSelect = (type) => {
-    setChartType(type);
-  };
-
-  const onDataTypeSelect = (type) => {
-    setDataType(type);
-
-    setQuestionsFromTypes();
-  };
-
   const def = () => {
     if (chart && chart.options) {
       return typeOptions.find((d) => d.qid === chart.options.type).text;
@@ -170,10 +160,56 @@ export default function RightPanel({
     return ['#a8e0ff', '#8ee3f5', '#70cad1', '#3e517a', '#b08ea2', '#BBB6DF'];
   };
 
+  const dateTypeDef = () => {
+    if (chart && chart.options && chart.options.dateType) {
+      return dateTypeOptions.find((q) => q.qid === chart.options.dateType).text;
+    }
+
+    return 'Day';
+  };
+
+  const onQuestionSelect = (qid) => {
+    setSelected(qid);
+  };
+
+  const onSecondQSelect = (qid) => {
+    setChecked(multiple, qid);
+  };
+
+  const onChartTypeSelect = (type) => {
+    setChartType(type);
+  };
+
+  const onDataTypeSelect = (type) => {
+    setDataType(type);
+
+    setQuestionsFromTypes();
+    setChecked(multiple, def4().qid);
+  };
+
+  const onDateTypeSelect = (type) => {
+    setDateType(type);
+  };
+
   const handleInputChange = (e) => {
     setMultiple(e.target.checked);
     setChecked(e.target.checked, def4().qid);
   };
+
+  const isDate = () => {
+    if (chart && (chart.options.dataType === '2'
+      || chart.options.dataType === '3' || chart.options.dataType === '4'
+      || chart.options.dataType === '5')) {
+      return true;
+    }
+
+    if (chart && chart.options.dataType === '1'
+     && data.questions.find((q) => q.qid === chart.options.qid).type === 'control_datetime') {
+      return true;
+    }
+    return false;
+  };
+
 
   return (
     <div style={{ width: '100%' }}>
@@ -181,8 +217,9 @@ export default function RightPanel({
       <Dropdown def={def()} options={typeOptions} onSelect={onChartTypeSelect} />
       <Dropdown def={def2()} options={dataOptions} onSelect={onDataTypeSelect} />
       {questions && questions.length !== 0 ? <Dropdown def={def3()} options={questions} onSelect={onQuestionSelect} /> : null}
-      <Checkbox state={multiple} handleChange={handleInputChange} />
+      {scndQuestions && scndQuestions.length !== 0 ? <Checkbox state={multiple} handleChange={handleInputChange} /> : null}
       {multiple ? <Dropdown def={def4().text} options={scndQuestions} onSelect={onSecondQSelect} /> : null}
+      {isDate() ? <Dropdown def={dateTypeDef()} options={dateTypeOptions} onSelect={onDateTypeSelect} /> : null}
       <ColorPicker isMultiple={chart && chart.options.type === 'pie'} colors={def5()} onColorsChange={setColors} />
     </div>
   );

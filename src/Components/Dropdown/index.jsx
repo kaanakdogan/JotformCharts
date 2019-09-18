@@ -43,7 +43,7 @@ export default function Dropdown({ options, def, onSelect }) {
         ? (
           <Styles.DropviewContent>
             <Styles.DropviewList>
-              {options.map((opt) => <ListItem opt={opt} onClick={selectItem} selected={selected} />)}
+              {options.map((opt) => <ListItem key={opt.qid} opt={opt} onClick={selectItem} selected={selected} />)}
             </Styles.DropviewList>
           </Styles.DropviewContent>
         ) : null}
@@ -57,6 +57,6 @@ function ListItem({ opt, onClick, selected }) {
   };
 
   return (
-    <Styles.DropviewListItem key={opt.qid} onClick={handleClick} selected={selected === opt.text}>{opt.text}</Styles.DropviewListItem>
+    <Styles.DropviewListItem onClick={handleClick} selected={selected === opt.text}>{opt.text}</Styles.DropviewListItem>
   );
 }
