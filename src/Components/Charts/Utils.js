@@ -46,6 +46,7 @@ function compareDates(date1, date2) {
   const str1 = `${arr1[2]}${Number(arr1[1])}${arr1[0]}`;
   const str2 = `${arr2[2]}${Number(arr2[1])}${arr2[0]}`;
 
+  console.log({ str1, str2 });
   return Number(str1) - Number(str2);
 }
 

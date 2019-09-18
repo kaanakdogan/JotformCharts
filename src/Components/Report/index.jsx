@@ -58,13 +58,29 @@ export default function Reports({ match, location }) {
     const prom = promisify(global.JF.getFormQuestions);
     prom(match.params.id)
       .then((res) => {
-        setData({
-          id: match.params.id,
-          questions: Object.values(res),
+        const name = promisify(global.JF.getFormProperty);
+        name(match.params.id, 'pagetitle').then((res2) => {
+          setData({
+            id: match.params.id,
+            name: res2.pagetitle,
+            questions: Object.values(res),
+          });
         });
       })
       .then(() => {
-        GetSubmissions(match.params.id).then((r) => setSubmissions(r));
+        GetSubmissions(match.params.id).then((r) => {
+          setSubmissions(r);
+          const prom2 = GetFormReports(match.params.id);
+          prom2.then((reps) => {
+            if (!reps) {
+              setReports([]);
+            } else {
+              setReports(reps);
+            }
+            setDidMount(true);
+            setModal({ isOpen: false });
+          });
+        });
       })
       .catch(() => {
         setModal({
@@ -73,17 +89,6 @@ export default function Reports({ match, location }) {
           redirectUrl: '',
         });
       });
-
-    const prom2 = GetFormReports(match.params.id);
-    prom2.then((reps) => {
-      if (!reps) {
-        setReports([]);
-      } else {
-        setReports(reps);
-      }
-      setDidMount(true);
-      setModal({ isOpen: false });
-    });
   }, [match.params.id]);
 
   React.useEffect(() => {
@@ -102,7 +107,7 @@ export default function Reports({ match, location }) {
       {didMount
         ? (
           <>
-            <Header />
+            <Header name={data.name} />
             <ReportPicker
               active={active}
               reports={reports}
