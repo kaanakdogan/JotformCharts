@@ -96,6 +96,7 @@ function handleSingleChoice(array, submission, value) {
     array.push({
       label,
       value,
+      type: submission.type,
     });
   }
   return array;
@@ -169,9 +170,37 @@ export default function mapQuestionAnswers(submissions, cat, qid, qid2) {
     return handleSingleChoice(array, current.answers[qid], answ2);
   }
 
-  const data = submissions.reduce(reducer, []);
+  const toReturn = submissions.reduce(reducer, []);
 
-  return data;
+
+  if (toReturn[0].type === 'control_datetime') {
+    console.log(toReturn);
+    toReturn.sort((a, b) => compareDates(a.label, b.label));
+    if (cat === 'week') {
+      const weekArr = [];
+      const strtDate = parseDate(toReturn[0].label);
+      const endDate = parseDate(toReturn[toReturn.length - 1].label);
+      const weeks = getDates(strtDate, endDate);
+
+      for (let i = 0; i < weeks.length; i++) {
+        let value = 0;
+        for (let c = 0; c < toReturn.length; c++) {
+          if ((calcWeekNumber(weeks[i], parseDate(toReturn[c].label)) === 0
+           && compareDates(toReturn[c].label, dateObjToLabel(weeks[i])) >= 0)) {
+            value += toReturn[c].value;
+          }
+        }
+
+        weekArr.push({
+          label: dateObjToLabel(weeks[i]),
+          value,
+        });
+      }
+
+      return weekArr;
+    }
+  }
+  return toReturn;
 }
 
 export function mapSubmissionsByDate(submissions, cat, qid) {
