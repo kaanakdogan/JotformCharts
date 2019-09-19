@@ -51,9 +51,32 @@ function compareDates(date1, date2) {
   const arr1 = date1.split('-');
   const arr2 = date2.split('-');
 
-  const str1 = `${arr1[2]}${Number(arr1[1])}${arr1[0]}`;
-  const str2 = `${arr2[2]}${Number(arr2[1])}${arr2[0]}`;
+  let day1 = arr1[0];
+  let day2 = arr2[0];
 
+  if (day1.length === 1) {
+    day1 = `0${String(arr1[0])}`;
+  }
+
+  if (day2.length === 1) {
+    day2 = `0${String(arr2[0])}`;
+  }
+
+  let m1 = arr1[1];
+  let m2 = arr2[1];
+
+  if (m1.length === 1) {
+    m1 = `0${String(arr1[1])}`;
+  }
+
+  if (m2.length === 1) {
+    m2 = `0${String(arr2[1])}`;
+  }
+
+  const str1 = `${arr1[2]}${m1}${day1}`;
+  const str2 = `${arr2[2]}${m2}${day2}`;
+
+  console.log({ str1, str2 });
   return Number(str1) - Number(str2);
 }
 
@@ -204,7 +227,9 @@ export default function mapQuestionAnswers(submissions, opts, qid, qid2) {
 
     if (end) {
       const compare = dateObjToLabel(end);
+      console.log(compare);
       toReturn = toReturn.reduce((array, current) => {
+        console.log({ compare, lab: current.label, comp: compareDates(current.label, compare) });
         if (compareDates(current.label, compare) <= 0) {
           array.push(current);
         }
