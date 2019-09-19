@@ -46,6 +46,7 @@ export default function Layout({
           height={870}
           layout={layout}
           onLayoutChange={(lo) => onLayoutChange(lo)}
+          useCSSTransforms={false}
         >
           {charts.map((c) => (
             <div key={c.i}>

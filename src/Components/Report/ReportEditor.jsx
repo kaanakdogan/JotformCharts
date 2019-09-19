@@ -25,6 +25,20 @@ export default function ReportEditor({ report, onReportEdit }) {
   const [selected, setSelected] = React.useState();
   const [didMount, setDidMount] = React.useState(false);
 
+  const saveReport = () => {
+    const reportToReturn = JSON.parse(JSON.stringify(report));
+    reportToReturn.charts = [];
+    for (let c = 0; c < layouts.length; c++) {
+      const k = layouts[c].i;
+      reportToReturn.charts.push({
+        layout: layouts.filter((l) => l.i == k)[0],
+        i: k,
+        options: charts[c].options,
+      });
+    }
+    onReportEdit(reportToReturn);
+  };
+
   React.useEffect(() => {
     if (report && report.charts) {
       setLayouts(report.charts.map((l) => l.layout));
@@ -41,22 +55,15 @@ export default function ReportEditor({ report, onReportEdit }) {
     }
 
     if (layouts && charts) {
-      if (layouts.length !== charts.length) {
-        return;
-      }
-      const reportToReturn = JSON.parse(JSON.stringify(report));
-      reportToReturn.charts = [];
-      for (let c = 0; c < layouts.length; c++) {
-        const k = layouts[c].i;
-        reportToReturn.charts.push({
-          layout: layouts.filter((l) => l.i == k)[0],
-          i: k,
-          options: charts[c].options,
-        });
-      }
-      onReportEdit(reportToReturn);
+      saveReport();
     }
-  }, [layouts, charts]);
+  }, [charts]);
+
+  React.useEffect(() => {
+    if (layouts && charts) {
+      saveReport();
+    }
+  }, [layouts]);
 
   React.useEffect(() => {
     setPanel(false);
@@ -204,6 +211,27 @@ export default function ReportEditor({ report, onReportEdit }) {
     setCharts(newCharts);
   };
 
+  const setDateFilters = (start, end) => {
+    if (!didMount) {
+      return;
+    }
+    const newCharts = charts.map((c) => {
+      if (c.i === selected) {
+        const newC = c;
+        newC.options.startDate = start;
+        newC.options.endDate = end;
+
+        console.log(newC);
+        return newC;
+      }
+
+
+      return c;
+    });
+
+    setCharts(newCharts);
+  };
+
   return (
     <>
       <button type="button" onClick={handleAdd}>New Chart</button>
@@ -224,7 +252,6 @@ export default function ReportEditor({ report, onReportEdit }) {
 
           {panel ? (
             <Styles.RightItem isVisible={panel}>
-              {console.log(charts.find((c) => c.i == selected))}
               <RightPanel
                 chart={charts.find((c) => c.i == selected)}
                 setSelected={setSelectedQuestion}
@@ -233,6 +260,7 @@ export default function ReportEditor({ report, onReportEdit }) {
                 setColors={setColors}
                 setChecked={setChecked}
                 setDateType={setDateType}
+                setDateFilters={setDateFilters}
               />
             </Styles.RightItem>
           ) : null}

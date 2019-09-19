@@ -1,5 +1,8 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import 'react-datepicker/dist/react-datepicker-cssmodules.css';
 import * as Styles from './styles';
 import { FormDataContext } from '../../Contexts/FormsContext';
 import Dropdown from '../Dropdown';
@@ -41,15 +44,30 @@ const dateTypeOptions = [
   { qid: 'week', text: 'Week' },
 ];
 
+const getDateFromJson = (date) => {
+  console.log(date);
+  if (date) {
+    return new Date(date.year, date.month, date.day);
+  }
+
+  return null;
+};
+
 
 export default function RightPanel({
-  chart, setSelected, setChartType, setDataType, setColors, setChecked, setDateType,
+  chart, setSelected, setChartType, setDataType, setColors, setChecked, setDateType, setDateFilters,
 }) {
   const [questions, setQuestions] = React.useState([]);
   const [scndQuestions, setScndQuestions] = React.useState([]);
   const [multiple, setMultiple] = React.useState();
   const [data] = React.useContext(FormDataContext);
   const [dataOptions, setDataOptions] = React.useState(standardOptions);
+  const [startDate, setStartDate] = React.useState();
+  const [endDate, setEndDate] = React.useState();
+
+  React.useEffect(() => {
+    console.log(startDate);
+  }, []);
 
   const setQuestionsFromTypes = () => {
     const { options } = chart;
@@ -63,9 +81,6 @@ export default function RightPanel({
       setScndQuestions(qs2);
     } else if (options.dataType === '2') {
       setQuestions(null);
-
-      const qs = data.questions.filter((q) => q.type === 'control_datetime');
-      setScndQuestions(qs);
     } else {
       const qs = data.questions.filter((q) => stdTypeCondition(q.type));
       setQuestions(qs);
@@ -99,6 +114,9 @@ export default function RightPanel({
     } else {
       setMultiple(false);
     }
+
+    setStartDate(getDateFromJson(chart.options.startDate));
+    setEndDate(getDateFromJson(chart.options.startDate));
   }, [chart]);
 
   React.useEffect(() => {
@@ -191,6 +209,21 @@ export default function RightPanel({
     setDateType(type);
   };
 
+  const onDateStartSelect = (date) => {
+    setStartDate(date);
+
+    if (date) {
+      const year = date.getFullYear();
+      const month = date.getMonth();
+      const day = date.getDay();
+      const start = { year, month, day };
+      setDateFilters(start, endDate);
+      return;
+    }
+
+    setDateFilters(null, endDate);
+  };
+
   const handleInputChange = (e) => {
     setMultiple(e.target.checked);
     setChecked(e.target.checked, def4().qid);
@@ -219,7 +252,17 @@ export default function RightPanel({
       {questions && questions.length !== 0 ? <Dropdown def={def3()} options={questions} onSelect={onQuestionSelect} /> : null}
       {scndQuestions && scndQuestions.length !== 0 ? <Checkbox state={multiple} handleChange={handleInputChange} /> : null}
       {multiple ? <Dropdown def={def4().text} options={scndQuestions} onSelect={onSecondQSelect} /> : null}
-      {isDate() ? <Dropdown def={dateTypeDef()} options={dateTypeOptions} onSelect={onDateTypeSelect} /> : null}
+      {isDate() ? (
+        <>
+          <Dropdown def={dateTypeDef()} options={dateTypeOptions} onSelect={onDateTypeSelect} />
+          <DatePicker
+            selected={startDate}
+            onChange={onDateStartSelect}
+          />
+        </>
+      )
+        : null}
+
       <ColorPicker isMultiple={chart && chart.options.type === 'pie'} colors={def5()} onColorsChange={setColors} />
     </div>
   );

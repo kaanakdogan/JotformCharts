@@ -46,7 +46,6 @@ function compareDates(date1, date2) {
   const str1 = `${arr1[2]}${Number(arr1[1])}${arr1[0]}`;
   const str2 = `${arr2[2]}${Number(arr2[1])}${arr2[0]}`;
 
-  console.log({ str1, str2 });
   return Number(str1) - Number(str2);
 }
 
@@ -175,7 +174,6 @@ export default function mapQuestionAnswers(submissions, cat, qid, qid2) {
 
 
   if (toReturn[0].type === 'control_datetime') {
-    console.log(toReturn);
     toReturn.sort((a, b) => compareDates(a.label, b.label));
     if (cat === 'week') {
       const weekArr = [];
@@ -204,19 +202,15 @@ export default function mapQuestionAnswers(submissions, cat, qid, qid2) {
   return toReturn;
 }
 
-export function mapSubmissionsByDate(submissions, cat, qid) {
+export function mapSubmissionsByDate(submissions, cat) {
   function reducer(array, current) {
     if (!array) {
       array = [];
     }
 
-    let label;
-    if (qid) {
-      label = dateToLabel(current.answers[qid].answer);
-    } else {
-      const arr = current.created_at.split(' ')[0].split('-');
-      label = `${arr[2]}-${arr[1]}-${arr[0]}`;
-    }
+    const arr = current.created_at.split(' ')[0].split('-');
+    const label = `${arr[2]}-${arr[1]}-${arr[0]}`;
+
 
     if (array.filter((o) => o.label === label).length === 0) {
       array.push({
@@ -495,7 +489,6 @@ export function getSumByDate(submissions, cat, qid, qid2) {
       av += Number(data[i].values[c]);
     }
 
-    console.log(av);
     toReturn.push({
       label: data[i].date,
       value: av,
@@ -527,7 +520,6 @@ export function getSumByDate(submissions, cat, qid, qid2) {
     return weekArr;
   }
 
-  console.log(toReturn);
 
   return toReturn;
 }

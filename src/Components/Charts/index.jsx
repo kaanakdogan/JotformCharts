@@ -38,11 +38,7 @@ export default function ChartController({
         }
         break;
       case '2':
-        if (opts.second && opts.second.isChecked) {
-          d = mapSubmissionsByDate(submissions, opts.dateType, opts.second.qid);
-        } else {
-          d = mapSubmissionsByDate(submissions, opts.dateType);
-        }
+        d = mapSubmissionsByDate(submissions, opts.dateType);
         break;
       case '3':
         if (opts.second && opts.second.isChecked) {
@@ -60,10 +56,8 @@ export default function ChartController({
         break;
       case '5':
         if (opts.second && opts.second.isChecked) {
-          console.log({ qid2: opts.second.qid });
           d = getSumByDate(submissions, opts.dateType, opts.qid, opts.second.qid);
         } else {
-          console.log('get sadasd');
           d = getSumByDate(submissions, opts.dateType, opts.qid);
         }
         break;
