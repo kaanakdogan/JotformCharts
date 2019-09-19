@@ -19,12 +19,6 @@ export async function GetReports() {
 export async function GetFormReports(formId) {
   reports = await GetReports();
 
-  console.log(reports);
-
-
-  setTimeout(() => {
-
-  }, 2000);
   if (reports) {
     // eslint-disable-next-line eqeqeq
     const formReps = reports.filter((r) => r.id == formId)[0];
@@ -73,8 +67,6 @@ export async function EditReport(formId, report) {
   if (!formReports) {
     formReports = [];
   }
-
-  console.log(report);
 
   formReports = formReports.filter((r) => r.id !== report.id);
   formReports.push(report);

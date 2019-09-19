@@ -45,14 +45,12 @@ const dateTypeOptions = [
 ];
 
 const getDateFromJson = (date) => {
-  console.log(date);
   if (date) {
     return new Date(date.year, date.month, date.day);
   }
 
   return null;
 };
-
 
 export default function RightPanel({
   chart, setSelected, setChartType, setDataType, setColors, setChecked, setDateType, setDateFilters,
@@ -64,10 +62,6 @@ export default function RightPanel({
   const [dataOptions, setDataOptions] = React.useState(standardOptions);
   const [startDate, setStartDate] = React.useState();
   const [endDate, setEndDate] = React.useState();
-
-  React.useEffect(() => {
-    console.log(startDate);
-  }, []);
 
   const setQuestionsFromTypes = () => {
     const { options } = chart;
@@ -212,16 +206,49 @@ export default function RightPanel({
   const onDateStartSelect = (date) => {
     setStartDate(date);
 
+    let end = null;
+    if (endDate) {
+      const year = endDate.getFullYear();
+      const month = endDate.getMonth();
+      const day = endDate.getDate();
+      end = { year, month, day };
+    }
+
     if (date) {
       const year = date.getFullYear();
       const month = date.getMonth();
-      const day = date.getDay();
+      const day = date.getDate();
       const start = { year, month, day };
-      setDateFilters(start, endDate);
-      return;
+
+      console.log({ start, end });
+      setDateFilters(start, end);
+    } else {
+      setDateFilters(null, end);
+    }
+  };
+
+  const onDateEndSelect = (date) => {
+    setEndDate(date);
+
+    let start = null;
+    if (startDate) {
+      const year = startDate.getFullYear();
+      const month = startDate.getMonth();
+      const day = startDate.getDate();
+      start = { year, month, day };
     }
 
-    setDateFilters(null, endDate);
+
+    if (date) {
+      const year = date.getFullYear();
+      const month = date.getMonth();
+      const day = date.getDate();
+      const end = { year, month, day };
+      console.log({ start, end });
+      setDateFilters(start, end);
+    } else {
+      setDateFilters(start, null);
+    }
   };
 
   const handleInputChange = (e) => {
@@ -245,26 +272,61 @@ export default function RightPanel({
 
 
   return (
-    <div style={{ width: '100%' }}>
-      <p>Chart Options</p>
-      <Dropdown def={def()} options={typeOptions} onSelect={onChartTypeSelect} />
-      <Dropdown def={def2()} options={dataOptions} onSelect={onDataTypeSelect} />
-      {questions && questions.length !== 0 ? <Dropdown def={def3()} options={questions} onSelect={onQuestionSelect} /> : null}
-      {scndQuestions && scndQuestions.length !== 0 ? <Checkbox state={multiple} handleChange={handleInputChange} /> : null}
-      {multiple ? <Dropdown def={def4().text} options={scndQuestions} onSelect={onSecondQSelect} /> : null}
+    <Styles.RightPanelWrapper>
+      <Styles.RightPanelItem>
+
+        <p>Chart Options</p>
+      </Styles.RightPanelItem>
+      <Styles.RightPanelItem>
+        <Dropdown def={def()} options={typeOptions} onSelect={onChartTypeSelect} />
+      </Styles.RightPanelItem>
+      <Styles.RightPanelItem>
+        <Dropdown def={def2()} options={dataOptions} onSelect={onDataTypeSelect} />
+      </Styles.RightPanelItem>
+      {questions && questions.length !== 0
+        ? (
+          <Styles.RightPanelItem>
+            <Dropdown def={def3()} options={questions} onSelect={onQuestionSelect} />
+          </Styles.RightPanelItem>
+        )
+        : null}
+      {scndQuestions && scndQuestions.length !== 0
+        ? (
+          <Styles.RightPanelItem>
+            <Checkbox state={multiple} handleChange={handleInputChange} />
+          </Styles.RightPanelItem>
+        )
+        : null}
+      {multiple
+        ? (
+          <Styles.RightPanelItem>
+            <Dropdown def={def4().text} options={scndQuestions} onSelect={onSecondQSelect} />
+          </Styles.RightPanelItem>
+        )
+        : null}
       {isDate() ? (
         <>
-          <Dropdown def={dateTypeDef()} options={dateTypeOptions} onSelect={onDateTypeSelect} />
-          <DatePicker
-            selected={startDate}
-            onChange={onDateStartSelect}
-          />
+          <Styles.RightPanelItem>
+            <Dropdown def={dateTypeDef()} options={dateTypeOptions} onSelect={onDateTypeSelect} />
+          </Styles.RightPanelItem>
+          <Styles.RightPanelItem>
+            <DatePicker
+              selected={startDate}
+              onChange={onDateStartSelect}
+            />
+          </Styles.RightPanelItem>
+          <Styles.RightPanelItem>
+            <DatePicker
+              selected={endDate}
+              onChange={onDateEndSelect}
+            />
+          </Styles.RightPanelItem>
         </>
       )
         : null}
 
       <ColorPicker isMultiple={chart && chart.options.type === 'pie'} colors={def5()} onColorsChange={setColors} />
-    </div>
+    </Styles.RightPanelWrapper>
   );
 }
 

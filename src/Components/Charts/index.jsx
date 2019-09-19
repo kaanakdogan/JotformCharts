@@ -32,42 +32,44 @@ export default function ChartController({
     switch (opts.dataType) {
       case '1':
         if (opts.second && opts.second.isChecked) {
-          d = mapQuestionAnswers(submissions, opts.dateType, opts.qid, opts.second.qid);
+          d = mapQuestionAnswers(submissions, opts, opts.qid, opts.second.qid);
         } else {
-          d = mapQuestionAnswers(submissions, opts.dateType, opts.qid);
+          d = mapQuestionAnswers(submissions, opts, opts.qid);
         }
         break;
       case '2':
-        d = mapSubmissionsByDate(submissions, opts.dateType);
+        d = mapSubmissionsByDate(submissions, opts);
         break;
       case '3':
         if (opts.second && opts.second.isChecked) {
-          d = getAvarageByDate(submissions, opts.dateType, opts.qid, opts.second.qid);
+          d = getAvarageByDate(submissions, opts, opts.qid, opts.second.qid);
         } else {
-          d = getAvarageByDate(submissions, opts.dateType, opts.qid);
+          d = getAvarageByDate(submissions, opts, opts.qid);
         }
         break;
       case '4':
         if (opts.second && opts.second.isChecked) {
-          d = getHighestByDate(submissions, opts.dateType, opts.qid, opts.second.qid);
+          d = getHighestByDate(submissions, opts, opts.qid, opts.second.qid);
         } else {
-          d = getHighestByDate(submissions, opts.dateType, opts.qid);
+          d = getHighestByDate(submissions, opts, opts.qid);
         }
         break;
       case '5':
         if (opts.second && opts.second.isChecked) {
-          d = getSumByDate(submissions, opts.dateType, opts.qid, opts.second.qid);
+          d = getSumByDate(submissions, opts, opts.qid, opts.second.qid);
         } else {
-          d = getSumByDate(submissions, opts.dateType, opts.qid);
+          d = getSumByDate(submissions, opts, opts.qid);
         }
         break;
       default:
-        d = submissions.reduce(mapQuestionAnswers(opts.qid), []);
+        d = [];
         break;
     }
 
     setData(d);
-  }, [opts.qid, opts.dataType, opts.type, opts.second, opts.dateType, submissions]);
+  }, [opts.qid, opts.dataType, opts.type,
+    opts.second, opts.dateType, opts.startDate,
+    opts.endDate, submissions]);
 
   const handleClick = (e) => {
     onClick(index);

@@ -39,6 +39,14 @@ function getDates(startDate, stopDate) {
   return dateArray;
 }
 
+const getDateFromJson = (date) => {
+  if (date) {
+    return new Date(date.year, date.month, date.day);
+  }
+
+  return null;
+};
+
 function compareDates(date1, date2) {
   const arr1 = date1.split('-');
   const arr2 = date2.split('-');
@@ -151,7 +159,7 @@ function handleRating(array, submission) {
   return array;
 }
 
-export default function mapQuestionAnswers(submissions, cat, qid, qid2) {
+export default function mapQuestionAnswers(submissions, opts, qid, qid2) {
   function reducer(array, current) {
     if (!array) {
       array = [];
@@ -170,10 +178,37 @@ export default function mapQuestionAnswers(submissions, cat, qid, qid2) {
     return handleSingleChoice(array, current.answers[qid], answ2);
   }
 
-  const toReturn = submissions.reduce(reducer, []);
+  const cat = opts.dateType;
 
-
+  const toRet = submissions.reduce(reducer, []);
+  let toReturn = toRet;
   if (toReturn[0].type === 'control_datetime') {
+    const strt = getDateFromJson(opts.startDate);
+    const end = getDateFromJson(opts.endDate);
+
+    if (strt) {
+      const compare = dateObjToLabel(strt);
+      toReturn = toRet.reduce((array, current) => {
+        if (compareDates(current.label, compare) >= 0) {
+          array.push(current);
+        }
+
+        return array;
+      }, []);
+    }
+
+
+    if (end) {
+      const compare = dateObjToLabel(end);
+      toReturn = toReturn.reduce((array, current) => {
+        if (compareDates(current.label, compare) <= 0) {
+          array.push(current);
+        }
+
+        return array;
+      }, []);
+    }
+
     toReturn.sort((a, b) => compareDates(a.label, b.label));
     if (cat === 'week') {
       const weekArr = [];
@@ -202,12 +237,11 @@ export default function mapQuestionAnswers(submissions, cat, qid, qid2) {
   return toReturn;
 }
 
-export function mapSubmissionsByDate(submissions, cat) {
+export function mapSubmissionsByDate(submissions, opts) {
   function reducer(array, current) {
     if (!array) {
       array = [];
     }
-
     const arr = current.created_at.split(' ')[0].split('-');
     const label = `${arr[2]}-${arr[1]}-${arr[0]}`;
 
@@ -230,8 +264,37 @@ export function mapSubmissionsByDate(submissions, cat) {
     return array;
   }
 
-  const toReturn = submissions.reduce(reducer, []);
-  toReturn.sort((a, b) => compareDates(a.label, b.label));
+  const cat = opts.dateType;
+
+  const toRet = submissions.reduce(reducer, []);
+  toRet.sort((a, b) => compareDates(a.label, b.label));
+
+  let toReturn = toRet;
+  const strt = getDateFromJson(opts.startDate);
+  const end = getDateFromJson(opts.endDate);
+
+  if (strt) {
+    const compare = dateObjToLabel(strt);
+    toReturn = toRet.reduce((array, current) => {
+      if (compareDates(current.label, compare) >= 0) {
+        array.push(current);
+      }
+
+      return array;
+    }, []);
+  }
+
+
+  if (end) {
+    const compare = dateObjToLabel(end);
+    toReturn = toReturn.reduce((array, current) => {
+      if (compareDates(current.label, compare) <= 0) {
+        array.push(current);
+      }
+
+      return array;
+    }, []);
+  }
 
   if (cat === 'week') {
     const weekArr = [];
@@ -259,7 +322,7 @@ export function mapSubmissionsByDate(submissions, cat) {
   return toReturn;
 }
 
-export function getAvarageByDate(submissions, cat, qid, qid2) {
+export function getAvarageByDate(submissions, opts, qid, qid2) {
   function reducer(array, current) {
     if (!array) {
       array = [];
@@ -298,9 +361,10 @@ export function getAvarageByDate(submissions, cat, qid, qid2) {
     return array;
   }
 
+  const cat = opts.dateType;
   const data = submissions.reduce(reducer, []);
 
-  const toReturn = [];
+  const toRet = [];
   for (let i = 0; i < data.length; i++) {
     let c = 0;
     let av = 0;
@@ -309,14 +373,41 @@ export function getAvarageByDate(submissions, cat, qid, qid2) {
     }
 
     av /= c;
-    toReturn.push({
+    toRet.push({
       label: data[i].date,
       value: av,
       count: c,
     });
   }
 
-  toReturn.sort((a, b) => compareDates(a.label, b.label));
+  toRet.sort((a, b) => compareDates(a.label, b.label));
+
+  let toReturn = toRet;
+  const strt = getDateFromJson(opts.startDate);
+  const end = getDateFromJson(opts.endDate);
+
+  if (strt) {
+    const compare = dateObjToLabel(strt);
+    toReturn = toRet.reduce((array, current) => {
+      if (compareDates(current.label, compare) >= 0) {
+        array.push(current);
+      }
+
+      return array;
+    }, []);
+  }
+
+
+  if (end) {
+    const compare = dateObjToLabel(end);
+    toReturn = toReturn.reduce((array, current) => {
+      if (compareDates(current.label, compare) <= 0) {
+        array.push(current);
+      }
+
+      return array;
+    }, []);
+  }
 
   if (cat === 'week') {
     const weekArr = [];
@@ -348,10 +439,7 @@ export function getAvarageByDate(submissions, cat, qid, qid2) {
 }
 
 
-export function getHighestByDate(submissions, cat, qid, qid2) {
-  console.log({
-    submissions, cat, qid, qid2,
-  });
+export function getHighestByDate(submissions, opts, qid, qid2) {
   function reducer(array, current) {
     if (!array) {
       array = [];
@@ -389,10 +477,10 @@ export function getHighestByDate(submissions, cat, qid, qid2) {
 
     return array;
   }
-
+  const cat = opts.dateType;
   const data = submissions.reduce(reducer, []);
 
-  const toReturn = [];
+  const toRet = [];
   for (let i = 0; i < data.length; i++) {
     let value = 0;
     for (let c = 0; c < data[i].values.length; c++) {
@@ -402,13 +490,42 @@ export function getHighestByDate(submissions, cat, qid, qid2) {
     }
 
 
-    toReturn.push({
+    toRet.push({
       label: data[i].date,
       value,
     });
   }
 
-  toReturn.sort((a, b) => compareDates(a.label, b.label));
+
+  toRet.sort((a, b) => compareDates(a.label, b.label));
+
+  let toReturn = toRet;
+  const strt = getDateFromJson(opts.startDate);
+  const end = getDateFromJson(opts.endDate);
+
+  if (strt) {
+    const compare = dateObjToLabel(strt);
+    toReturn = toRet.reduce((array, current) => {
+      if (compareDates(current.label, compare) >= 0) {
+        array.push(current);
+      }
+
+      return array;
+    }, []);
+  }
+
+
+  if (end) {
+    const compare = dateObjToLabel(end);
+    toReturn = toReturn.reduce((array, current) => {
+      if (compareDates(current.label, compare) <= 0) {
+        array.push(current);
+      }
+
+      return array;
+    }, []);
+  }
+
 
   if (cat === 'week') {
     const weekArr = [];
@@ -439,7 +556,7 @@ export function getHighestByDate(submissions, cat, qid, qid2) {
   return toReturn;
 }
 
-export function getSumByDate(submissions, cat, qid, qid2) {
+export function getSumByDate(submissions, opts, qid, qid2) {
   function reducer(array, current) {
     if (!array) {
       array = [];
@@ -479,9 +596,10 @@ export function getSumByDate(submissions, cat, qid, qid2) {
     return array;
   }
 
+  const cat = opts.dateType;
   const data = submissions.reduce(reducer, []);
 
-  const toReturn = [];
+  const toRet = [];
   for (let i = 0; i < data.length; i++) {
     let c = 0;
     let av = 0;
@@ -489,12 +607,41 @@ export function getSumByDate(submissions, cat, qid, qid2) {
       av += Number(data[i].values[c]);
     }
 
-    toReturn.push({
+    toRet.push({
       label: data[i].date,
       value: av,
     });
   }
-  toReturn.sort((a, b) => compareDates(a.label, b.label));
+
+  toRet.sort((a, b) => compareDates(a.label, b.label));
+
+  let toReturn = toRet;
+  const strt = getDateFromJson(opts.startDate);
+  const end = getDateFromJson(opts.endDate);
+
+  if (strt) {
+    const compare = dateObjToLabel(strt);
+    toReturn = toRet.reduce((array, current) => {
+      if (compareDates(current.label, compare) >= 0) {
+        array.push(current);
+      }
+
+      return array;
+    }, []);
+  }
+
+
+  if (end) {
+    const compare = dateObjToLabel(end);
+    toReturn = toReturn.reduce((array, current) => {
+      if (compareDates(current.label, compare) <= 0) {
+        array.push(current);
+      }
+
+      return array;
+    }, []);
+  }
+
 
   if (cat === 'week') {
     const weekArr = [];

@@ -30,3 +30,12 @@ export const DocMain = styled.div`
   height: calc(100vh - 171px);
   transition: height .3s;
 `;
+
+export const RightPanelWrapper = styled.div`
+  display:flex,
+  flex-direction: column;
+`;
+
+export const RightPanelItem = styled.div`
+  padding: 15px;
+`;

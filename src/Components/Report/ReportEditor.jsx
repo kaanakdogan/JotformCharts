@@ -1,4 +1,5 @@
 import React from 'react';
+import html2canvas from 'html2canvas';
 import Layout from '../ResponsiveLayout';
 import * as Styles from './styles';
 import RightPanel from './RightPanel';
@@ -55,15 +56,13 @@ export default function ReportEditor({ report, onReportEdit }) {
     }
 
     if (layouts && charts) {
-      saveReport();
-    }
-  }, [charts]);
+      if (layouts.length !== charts.length) {
+        return;
+      }
 
-  React.useEffect(() => {
-    if (layouts && charts) {
       saveReport();
     }
-  }, [layouts]);
+  }, [layouts, charts]);
 
   React.useEffect(() => {
     setPanel(false);
@@ -212,7 +211,7 @@ export default function ReportEditor({ report, onReportEdit }) {
   };
 
   const setDateFilters = (start, end) => {
-    if (!didMount) {
+    if (didMount) {
       return;
     }
     const newCharts = charts.map((c) => {
@@ -232,9 +231,24 @@ export default function ReportEditor({ report, onReportEdit }) {
     setCharts(newCharts);
   };
 
+  const handleDownload = (e) => {
+    e.preventDefault();
+
+    const el = document.querySelector('.react-grid-layout');
+    html2canvas(el).then((canvas) => {
+      const a = document.createElement('a');
+      // toDataURL defaults to png, so we need to request a jpeg, then convert for file download.
+      a.href = canvas.toDataURL('image/jpeg').replace('image/jpeg', 'image/octet-stream');
+      a.download = 'MyReport.jpg';
+      a.click();
+    });
+  };
+
   return (
     <>
       <button type="button" onClick={handleAdd}>New Chart</button>
+      <button type="button" onClick={handleDownload}>Download</button>
+
       {charts ? (
         <Styles.FlexContainer>
           <Styles.MainItem>

@@ -73,6 +73,7 @@ export const ModalWrapper = styled.div`
 `;
 
 export const Root = styled.div`
+  z-index:10;
   font-family: Circular Std Medium;
   position: fixed;
   top: 0;
