@@ -18,7 +18,7 @@ function Login({ location }) {
       .then(() => {
         setAuth(true);
         const formProm = promisify(global.JF.getForms);
-        formProm({ limit: 200 })
+        formProm({ limit: 1000 })
           .then((res) => {
             setForms(res);
             if (location.pathname != '/') {

@@ -6,6 +6,7 @@ import CreateReport from './CreateReport/Index';
 import { ModalView } from './Modal/Index';
 import { ModalContext } from '../Contexts/ModalContext';
 import Loading from './Loading';
+import Email from './Email';
 
 const FullScreenTheme = {
   modalContainer: {
@@ -61,6 +62,16 @@ export default function ModalController() {
     return (
       <ThemeProvider theme={CreateReportTheme}>
         <ModalView header="Create A Report"><CreateReport /></ModalView>
+      </ThemeProvider>
+    );
+  } if (modal.modalName === 'email') {
+    return (
+      <ThemeProvider theme={CreateReportTheme}>
+        <ModalView header="Send Email">
+          <Email>
+            <img src={modal.img} alt="" width="100%" />
+          </Email>
+        </ModalView>
       </ThemeProvider>
     );
   } if (modal.modalName === 'errorModal') {

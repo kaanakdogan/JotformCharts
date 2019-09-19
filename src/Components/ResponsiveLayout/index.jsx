@@ -42,7 +42,7 @@ export default function Layout({
           className="layout"
 
           rowHeight={60}
-          width={1200}
+          width={800}
           height={870}
           layout={layout}
           onLayoutChange={(lo) => onLayoutChange(lo)}

@@ -110,7 +110,7 @@ export default function RightPanel({
     }
 
     setStartDate(getDateFromJson(chart.options.startDate));
-    setEndDate(getDateFromJson(chart.options.startDate));
+    setEndDate(getDateFromJson(chart.options.endDate));
   }, [chart]);
 
   React.useEffect(() => {

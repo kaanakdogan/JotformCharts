@@ -11,7 +11,7 @@ export const DocArea = styled.div`
 `;
 
 export const LayoutDiv = styled.div`
-  min-width: 1200px;
+  min-width: 800px;
   margin: 0 auto;
   position: relative;
 `;

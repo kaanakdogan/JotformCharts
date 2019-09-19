@@ -4,6 +4,7 @@ import Layout from '../ResponsiveLayout';
 import * as Styles from './styles';
 import RightPanel from './RightPanel';
 import { FormDataContext } from '../../Contexts/FormsContext';
+import { ModalContext } from '../../Contexts/ModalContext';
 
 function getDefaultQuestion(questions) {
   const toRet = questions.find((q) => q.type === 'control_datetime'
@@ -22,6 +23,7 @@ export default function ReportEditor({ report, onReportEdit }) {
   const [layouts, setLayouts] = React.useState();
   const [charts, setCharts] = React.useState();
   const [questions] = React.useContext(FormDataContext);
+  const [modal, setModal] = React.useContext(ModalContext);
   const [panel, setPanel] = React.useState(false);
   const [selected, setSelected] = React.useState();
   const [didMount, setDidMount] = React.useState(false);
@@ -244,10 +246,24 @@ export default function ReportEditor({ report, onReportEdit }) {
     });
   };
 
+  const handleEmail = (e) => {
+    e.preventDefault();
+
+    const el = document.querySelector('.react-grid-layout');
+    html2canvas(el).then((canvas) => {
+      setModal(({
+        isOpen: true,
+        modalName: 'email',
+        img: canvas.toDataURL('image/jpeg').replace('image/jpeg', 'image/octet-stream'),
+      }));
+    });
+  };
+
   return (
     <>
       <button type="button" onClick={handleAdd}>New Chart</button>
       <button type="button" onClick={handleDownload}>Download</button>
+      <button type="button" onClick={handleEmail}>Send Email</button>
 
       {charts ? (
         <Styles.FlexContainer>

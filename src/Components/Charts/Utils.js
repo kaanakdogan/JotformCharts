@@ -181,6 +181,10 @@ export default function mapQuestionAnswers(submissions, opts, qid, qid2) {
   const cat = opts.dateType;
 
   const toRet = submissions.reduce(reducer, []);
+  if (toRet.length === 0) {
+    toRet.push({ label: '', value: '' });
+    return toRet;
+  }
   let toReturn = toRet;
   if (toReturn[0].type === 'control_datetime') {
     const strt = getDateFromJson(opts.startDate);
@@ -267,6 +271,10 @@ export function mapSubmissionsByDate(submissions, opts) {
   const cat = opts.dateType;
 
   const toRet = submissions.reduce(reducer, []);
+  if (toRet.length === 0) {
+    toRet.push({ label: '', value: '' });
+    return toRet;
+  }
   toRet.sort((a, b) => compareDates(a.label, b.label));
 
   let toReturn = toRet;
@@ -381,6 +389,10 @@ export function getAvarageByDate(submissions, opts, qid, qid2) {
   }
 
   toRet.sort((a, b) => compareDates(a.label, b.label));
+  if (toRet.length === 0) {
+    toRet.push({ label: '', value: '' });
+    return toRet;
+  }
 
   let toReturn = toRet;
   const strt = getDateFromJson(opts.startDate);
@@ -498,6 +510,10 @@ export function getHighestByDate(submissions, opts, qid, qid2) {
 
 
   toRet.sort((a, b) => compareDates(a.label, b.label));
+  if (toRet.length === 0) {
+    toRet.push({ label: '', value: '' });
+    return toRet;
+  }
 
   let toReturn = toRet;
   const strt = getDateFromJson(opts.startDate);
@@ -614,6 +630,10 @@ export function getSumByDate(submissions, opts, qid, qid2) {
   }
 
   toRet.sort((a, b) => compareDates(a.label, b.label));
+  if (toRet.length === 0) {
+    toRet.push({ label: '', value: '' });
+    return toRet;
+  }
 
   let toReturn = toRet;
   const strt = getDateFromJson(opts.startDate);
@@ -645,23 +665,25 @@ export function getSumByDate(submissions, opts, qid, qid2) {
 
   if (cat === 'week') {
     const weekArr = [];
-    const strtDate = parseDate(toReturn[0].label);
-    const endDate = parseDate(toReturn[toReturn.length - 1].label);
-    const weeks = getDates(strtDate, endDate);
+    if (toReturn.length !== 0) {
+      const strtDate = parseDate(toReturn[0].label);
+      const endDate = parseDate(toReturn[toReturn.length - 1].label);
+      const weeks = getDates(strtDate, endDate);
 
-    for (let i = 0; i < weeks.length; i++) {
-      let value = 0;
-      for (let c = 0; c < toReturn.length; c++) {
-        if ((calcWeekNumber(weeks[i], parseDate(toReturn[c].label)) === 0
+      for (let i = 0; i < weeks.length; i++) {
+        let value = 0;
+        for (let c = 0; c < toReturn.length; c++) {
+          if ((calcWeekNumber(weeks[i], parseDate(toReturn[c].label)) === 0
          && compareDates(toReturn[c].label, dateObjToLabel(weeks[i])) >= 0)) {
-          value += toReturn[c].value;
+            value += toReturn[c].value;
+          }
         }
-      }
 
-      weekArr.push({
-        label: dateObjToLabel(weeks[i]),
-        value,
-      });
+        weekArr.push({
+          label: dateObjToLabel(weeks[i]),
+          value,
+        });
+      }
     }
 
     return weekArr;
