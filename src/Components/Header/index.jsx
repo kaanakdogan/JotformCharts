@@ -1,7 +1,7 @@
 import React from 'react';
 import logo from '../../logo.svg';
 import {
-  Nav, NavHeader, Img, NavLeft, NavCenter, NavRight,
+  Nav, NavHeader, Img, NavLeft, NavCenter, NavRight, Title,
 } from './Styles';
 import { ModalContext } from '../../Contexts/ModalContext';
 
@@ -21,7 +21,7 @@ export default function Header({ name }) {
           <Img src={logo} className="App-logo" alt="logo" />
         </NavLeft>
         <NavCenter>
-          <button type="button" tabIndex={-1} to="/" onClick={handleClick}>{name}</button>
+          <Title type="button" tabIndex={-1} to="/" onClick={handleClick}>{name}</Title>
         </NavCenter>
         <NavRight />
       </NavHeader>

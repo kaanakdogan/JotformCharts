@@ -1,5 +1,29 @@
 import styled from 'styled-components';
 
+export const ButtonWrapper = styled.div`
+  font-family: "Circular Std Book", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  cursor: pointer;
+  opacity: 1;
+  pointer-events: inherit;
+  color: rgb(255, 255, 255);
+  width: unset;
+  user-select: none;
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  padding: 9px 12px;
+  border-radius: 4px;
+  border-width: 4px;
+  border-style: initial;
+  border-color: initial;
+  border-image: initial;
+  outline: none;
+`;
+
 export const tabList = styled.div`
   padding-left: 0;
   background-color: #254db3;
@@ -119,6 +143,8 @@ export const DropviewWrapper = styled.div`
 
 export const DropviewContent = styled.div`
   padding: 10px 5px;
+  display: flex;
+  flex-direction: column;
   background-color: #1c2843;
   border-radius: 5px;
   box-shadow: 0 0 10px rgba(0,0,0,.3);

@@ -19,6 +19,18 @@ export const NavLeft = styled.div`
   text-align: center;
 `;
 
+export const Title = styled.div`
+  font-size: 21px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: calc(100% - 24px);
+  cursor: pointer;
+  isplay: inline-block;
+  vertical-align: middle;
+  color: #FFFFFF;
+`;
+
 export const Img = styled.img`
   height: 45px;
 `;

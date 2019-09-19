@@ -64,8 +64,8 @@ export default function Email({ children }) {
       </Styles.Content>
 
       <Styles.Footer>
-        <Styles.Button type="submit" onClick={handleSubmit}>Submit </Styles.Button>
         {children}
+        <Styles.Button type="submit" onClick={handleSubmit}>Submit </Styles.Button>
       </Styles.Footer>
     </div>
   );

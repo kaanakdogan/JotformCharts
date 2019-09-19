@@ -91,7 +91,7 @@ export default function ReportEditor({ report, onReportEdit }) {
       i: String(key),
       x: 0,
       y: Infinity,
-      w: 4,
+      w: Infinity,
       h: 4,
       minW: 4,
       minH: 4,
@@ -261,9 +261,10 @@ export default function ReportEditor({ report, onReportEdit }) {
 
   return (
     <>
-      <button type="button" onClick={handleAdd}>New Chart</button>
-      <button type="button" onClick={handleDownload}>Download</button>
-      <button type="button" onClick={handleEmail}>Send Email</button>
+      <Styles.ButtonWrapper>
+        <Styles.Button type="button" onClick={handleDownload}>Download</Styles.Button>
+        <Styles.Button type="button" onClick={handleEmail}>Send Email</Styles.Button>
+      </Styles.ButtonWrapper>
 
       {charts ? (
         <Styles.FlexContainer>
@@ -276,6 +277,7 @@ export default function ReportEditor({ report, onReportEdit }) {
                 setPanel={togglePanel}
                 deleteChart={deleteChart}
                 chartSelection={[selected, setSelected]}
+                addChart={handleAdd}
               />
             </Styles.DocMain>
           </Styles.MainItem>

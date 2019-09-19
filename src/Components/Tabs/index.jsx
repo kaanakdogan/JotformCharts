@@ -7,13 +7,13 @@ import bread from '../../bread.svg';
 const Dropview = React.forwardRef((props, ref) => (
   <Styles.DropviewWrapper ref={ref}>
     <Styles.DropviewContent>
-      <button onClick={props.startEdit}>Rename</button>
-      <button onClick={props.deleteReport}>Delete</button>
-      <div>Delete</div>
-      <div>Delete</div>
-      <div>Delete</div>
-      <div>Delete</div>
+      <Styles.ButtonWrapper>
 
+        <span role="button" onClick={props.startEdit}>Rename</span>
+      </Styles.ButtonWrapper>
+      <Styles.ButtonWrapper>
+        <span role="button" onClick={props.deleteReport} style={{ color: '#ff1d39' }}>Delete</span>
+      </Styles.ButtonWrapper>
     </Styles.DropviewContent>
   </Styles.DropviewWrapper>
 ));

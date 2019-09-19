@@ -274,18 +274,20 @@ export default function RightPanel({
   return (
     <Styles.RightPanelWrapper>
       <Styles.RightPanelItem>
-
-        <p>Chart Options</p>
+        <h2>Chart Options</h2>
       </Styles.RightPanelItem>
       <Styles.RightPanelItem>
+        <p>Chart Type</p>
         <Dropdown def={def()} options={typeOptions} onSelect={onChartTypeSelect} />
       </Styles.RightPanelItem>
       <Styles.RightPanelItem>
+        <p>Data Options</p>
         <Dropdown def={def2()} options={dataOptions} onSelect={onDataTypeSelect} />
       </Styles.RightPanelItem>
       {questions && questions.length !== 0
         ? (
           <Styles.RightPanelItem>
+            <p>Form Field</p>
             <Dropdown def={def3()} options={questions} onSelect={onQuestionSelect} />
           </Styles.RightPanelItem>
         )
@@ -300,6 +302,7 @@ export default function RightPanel({
       {multiple
         ? (
           <Styles.RightPanelItem>
+            <p>Second Form Field</p>
             <Dropdown def={def4().text} options={scndQuestions} onSelect={onSecondQSelect} />
           </Styles.RightPanelItem>
         )
@@ -307,15 +310,19 @@ export default function RightPanel({
       {isDate() ? (
         <>
           <Styles.RightPanelItem>
+            <p>Date Span</p>
             <Dropdown def={dateTypeDef()} options={dateTypeOptions} onSelect={onDateTypeSelect} />
           </Styles.RightPanelItem>
           <Styles.RightPanelItem>
+            <h3>Date Filters</h3>
+            <p>Start</p>
             <DatePicker
               selected={startDate}
               onChange={onDateStartSelect}
             />
           </Styles.RightPanelItem>
           <Styles.RightPanelItem>
+            <p>End</p>
             <DatePicker
               selected={endDate}
               onChange={onDateEndSelect}
@@ -324,8 +331,10 @@ export default function RightPanel({
         </>
       )
         : null}
-
-      <ColorPicker isMultiple={chart && chart.options.type === 'pie'} colors={def5()} onColorsChange={setColors} />
+      <Styles.RightPanelItem>
+        <p>Color Palette</p>
+        <ColorPicker isMultiple={chart && chart.options.type === 'pie'} colors={def5()} onColorsChange={setColors} />
+      </Styles.RightPanelItem>
     </Styles.RightPanelWrapper>
   );
 }

@@ -9,7 +9,7 @@ import Loading from '../Loading';
 const ReactGridLayout = WidthProvider(RGL);
 
 export default function Layout({
-  layout, onLayoutChange, charts, setPanel, chartSelection, deleteChart,
+  layout, onLayoutChange, charts, setPanel, chartSelection, deleteChart, addChart,
 }) {
   const [data] = React.useContext(FormDataContext);
   const [selected, setSelected] = chartSelection;
@@ -24,8 +24,6 @@ export default function Layout({
     setSelected(null);
     setPanel(false);
   };
-
-  React.useEffect(() => console.log(charts), [charts]);
 
   React.useEffect(() => {
     setSelected(null);
@@ -56,6 +54,9 @@ export default function Layout({
             </div>
           ))}
         </ReactGridLayout>
+        <Styles.ButtonWrapper>
+          <Styles.Button type="button" onClick={addChart}>New Chart</Styles.Button>
+        </Styles.ButtonWrapper>
       </Styles.LayoutDiv>
     </Styles.DocArea>
   );
