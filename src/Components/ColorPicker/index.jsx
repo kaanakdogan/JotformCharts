@@ -108,6 +108,7 @@ function Picker({ color, onColorChange }) {
 
 const PickerDiv = styled.div`
 position: absolute;
+z-index: 10;
 `;
 
 const AddButton = styled.div`
@@ -130,6 +131,7 @@ color: #fff;
 border-radius: 10%;
 font-size: 20px;
 text-align: center;
+
 `;
 
 const FlexWrapper = styled.div`

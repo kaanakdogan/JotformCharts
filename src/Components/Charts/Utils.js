@@ -142,7 +142,7 @@ function handleRating(array, submission) {
   }
 
   if (array.length !== submission.stars + 1) {
-    for (let i = 0; i <= submission.stars; i++) {
+    for (let i = 1; i <= submission.stars; i++) {
       if (!array.find((a) => a.label == i)) {
         array.push({ label: i, value: 0 });
       }
