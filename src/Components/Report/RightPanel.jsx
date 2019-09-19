@@ -292,6 +292,11 @@ export default function RightPanel({
           </Styles.RightPanelItem>
         )
         : null}
+
+      <Styles.RightPanelItem>
+        <p>Color Palette</p>
+        <ColorPicker isMultiple={chart && chart.options.type === 'pie'} colors={def5()} onColorsChange={setColors} />
+      </Styles.RightPanelItem>
       {scndQuestions && scndQuestions.length !== 0
         ? (
           <Styles.RightPanelItem>
@@ -331,10 +336,6 @@ export default function RightPanel({
         </>
       )
         : null}
-      <Styles.RightPanelItem>
-        <p>Color Palette</p>
-        <ColorPicker isMultiple={chart && chart.options.type === 'pie'} colors={def5()} onColorsChange={setColors} />
-      </Styles.RightPanelItem>
     </Styles.RightPanelWrapper>
   );
 }

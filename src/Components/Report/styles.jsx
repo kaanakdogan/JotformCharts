@@ -27,7 +27,7 @@ export const RightItem = styled.div`
 export const DocMain = styled.div`
   position: relative;
   width: 100%;
-  height: calc(100vh - 171px);
+  height: 100vh;
   transition: height .3s;
 `;
 
