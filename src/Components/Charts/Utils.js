@@ -215,6 +215,9 @@ export default function mapQuestionAnswers(submissions, opts, qid, qid2) {
 
     toReturn.sort((a, b) => compareDates(a.label, b.label));
     if (cat === 'week') {
+      if (toReturn.length === 0) {
+        return toReturn;
+      }
       const weekArr = [];
       const strtDate = parseDate(toReturn[0].label);
       const endDate = parseDate(toReturn[toReturn.length - 1].label);
@@ -305,6 +308,9 @@ export function mapSubmissionsByDate(submissions, opts) {
   }
 
   if (cat === 'week') {
+    if (toReturn.length === 0) {
+      return toReturn;
+    }
     const weekArr = [];
     const strtDate = parseDate(toReturn[0].label);
     const endDate = parseDate(toReturn[toReturn.length - 1].label);
@@ -422,6 +428,9 @@ export function getAvarageByDate(submissions, opts, qid, qid2) {
   }
 
   if (cat === 'week') {
+    if (toReturn.length === 0) {
+      return toReturn;
+    }
     const weekArr = [];
     const strtDate = parseDate(toReturn[0].label);
     const endDate = parseDate(toReturn[toReturn.length - 1].label);
@@ -544,6 +553,9 @@ export function getHighestByDate(submissions, opts, qid, qid2) {
 
 
   if (cat === 'week') {
+    if (toReturn.length === 0) {
+      return toReturn;
+    }
     const weekArr = [];
     const strtDate = parseDate(toReturn[0].label);
     const endDate = parseDate(toReturn[toReturn.length - 1].label);
